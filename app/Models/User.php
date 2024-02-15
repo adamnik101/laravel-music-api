@@ -53,6 +53,9 @@ class User extends Authenticatable
     public function settings() : HasOne {
         return $this->hasOne(Setting::class);
     }
+    public function playlists() : HasMany {
+        return $this->hasMany(Playlist::class);
+    }
     public function likedTracks() : BelongsToMany {
         return $this->belongsToMany(Track::class, 'track_user_likes');
     }
