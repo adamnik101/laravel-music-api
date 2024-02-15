@@ -27,7 +27,11 @@ class AuthRepository implements AuthRepositoryInterface
 
         $user = Auth::user();
 
-        $token = $user->createToken("Token", [], now()->addWeek())->plainTextToken;
+        $abilities = ['end-user'];
+        if($user->role->name == 'admin') {
+            $abilities[] = 'admin';
+        }
+        $token = $user->createToken("Token", $abilities, now()->addWeek())->plainTextToken;
 
         $responseData = [
             "token" => $token,

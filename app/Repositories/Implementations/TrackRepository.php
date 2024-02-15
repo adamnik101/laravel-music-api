@@ -26,12 +26,12 @@ class TrackRepository implements TrackRepositoryInterface
         return $this->success("Track detail", TrackSerializer::serialize($track));
     }
 
-    function delete(): JsonResponse
+    function delete(string $id): JsonResponse
     {
         // TODO: Implement delete() method.
     }
 
-    function update(): JsonResponse
+    function update(string $id): JsonResponse
     {
         // TODO: Implement update() method.
     }

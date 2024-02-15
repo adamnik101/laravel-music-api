@@ -27,12 +27,12 @@ class GenreRepository implements GenreRepositoryInterface
         return $this->success("Genre detail", $genre);
     }
 
-    function delete(): JsonResponse
+    function delete(string $id): JsonResponse
     {
         // TODO: Implement delete() method.
     }
 
-    function update(): JsonResponse
+    function update(string $id): JsonResponse
     {
         // TODO: Implement update() method.
     }

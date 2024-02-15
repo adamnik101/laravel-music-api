@@ -36,12 +36,12 @@ class AlbumRepository implements AlbumRepositoryInterface
         }
     }
 
-    function delete(): JsonResponse
+    function delete(string $id): JsonResponse
     {
         // TODO: Implement delete() method.
     }
 
-    function update(): JsonResponse
+    function update(string $id): JsonResponse
     {
         // TODO: Implement update() method.
     }

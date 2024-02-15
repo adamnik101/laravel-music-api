@@ -14,14 +14,20 @@ class BaseController extends Controller
     {
         $this->repository = $repository;
     }
-
     public function fetchAll() : JsonResponse
     {
         return $this->repository->fetchAll();
     }
-
     public function fetchOne(string $id) : JsonResponse
     {
         return $this->repository->fetchOne($id);
+    }
+    public function update(string $id) : JsonResponse
+    {
+        return $this->repository->update($id);
+    }
+    public function delete(string $id) : JsonResponse
+    {
+        return $this->repository->delete($id);
     }
 }

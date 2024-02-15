@@ -33,16 +33,22 @@ class UserRepository implements UserRepositoryInterface
             return $this->success("User Detail", $user);
         }
         catch (\Exception $exception) {
-            return $this->error($exception->getMessage(), $exception->getCode());
+            return $this->error($exception->getMessage(), 500);
         }
     }
 
-    function delete(): JsonResponse
+    function delete(string $id): JsonResponse
     {
-        // TODO: Implement delete() method.
+        try{
+            $userToDelete = User::query()->find($id);
+
+            return $this->success('User deleted successfully.', $userToDelete, 204);
+        }catch (\Exception $exception) {
+            return $this->error($exception->getMessage(), 500);
+        }
     }
 
-    function update(): JsonResponse
+    function update(string $id): JsonResponse
     {
         // TODO: Implement update() method.
     }
