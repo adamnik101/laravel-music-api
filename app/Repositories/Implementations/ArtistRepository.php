@@ -21,7 +21,9 @@ class ArtistRepository implements ArtistRepositoryInterface
 
     function fetchOne(string $id): JsonResponse
     {
-        $artist = Artist::query()->find($id);
+        $artist = Artist::query()
+            ->with(['tracks.features', 'tracks.owner', 'features', 'albums'])
+            ->withCount(['albums','tracks', 'features', 'followedBy'])->find($id);
 
         if (!$artist) return $this->error("No artist found", 404);
 
@@ -35,6 +37,7 @@ class ArtistRepository implements ArtistRepositoryInterface
             $artist = new Artist();
             $artist->name = $name;
             $artist->cover = $cover;
+
             $artist->save();
 
             return $this->success("Added artist", $name, 201);
@@ -49,7 +52,7 @@ class ArtistRepository implements ArtistRepositoryInterface
         // TODO: Implement delete() method.
     }
 
-    function update(string $id): JsonResponse
+    public function update(array $data, string $id): JsonResponse
     {
         // TODO: Implement update() method.
     }

@@ -2,10 +2,14 @@
 
 namespace App\Http\Requests;
 
+use App\Traits\ResponseAPI;
+use Illuminate\Contracts\Validation\Validator;
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Http\Exceptions\HttpResponseException;
 
 class AlbumRequest extends FormRequest
 {
+    use ResponseAPI;
     /**
      * Determine if the user is authorized to make this request.
      */
@@ -22,7 +26,17 @@ class AlbumRequest extends FormRequest
     public function rules(): array
     {
         return [
-            "name" => 'required|string|min:2|max:100'
+            "name" => 'required|string|min:2|max:100',
+            "release_year" => 'required|digits:4',
+            "cover" => 'required|string',
+            "artist_id" => 'required|uuid'
         ];
+    }
+
+    protected function failedValidation(Validator $validator)
+    {
+        throw new HttpResponseException(
+            $this->error("Failed validation", 422, $validator->errors()->toArray()),
+        );
     }
 }

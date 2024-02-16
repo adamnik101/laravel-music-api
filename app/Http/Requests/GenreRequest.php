@@ -2,10 +2,14 @@
 
 namespace App\Http\Requests;
 
+use App\Traits\ResponseAPI;
+use Illuminate\Contracts\Validation\Validator;
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Http\Exceptions\HttpResponseException;
 
 class GenreRequest extends FormRequest
 {
+    use ResponseAPI;
     /**
      * Determine if the user is authorized to make this request.
      */
@@ -24,5 +28,11 @@ class GenreRequest extends FormRequest
         return [
             //
         ];
+    }
+    protected function failedValidation(Validator $validator)
+    {
+        throw new HttpResponseException(
+            $this->error("Failed validation", 422, $validator->errors()->toArray()),
+        );
     }
 }

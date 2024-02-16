@@ -2,6 +2,7 @@
 
 namespace App\Repositories\Implementations;
 
+use App\Helpers\AlbumHelper;
 use App\Http\Requests\AlbumRequest;
 use App\Http\Requests\ArtistRequest;
 use App\Models\Album;
@@ -10,6 +11,7 @@ use App\Repositories\Interfaces\AlbumRepositoryInterface;
 use App\Traits\ResponseAPI;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Http\JsonResponse;
+use Illuminate\Support\Facades\DB;
 
 class AlbumRepository implements AlbumRepositoryInterface
 {
@@ -17,7 +19,7 @@ class AlbumRepository implements AlbumRepositoryInterface
     function fetchAll(): JsonResponse
     {
         try {
-            $albums = Album::all();
+            $albums = Album::query()->withCount('tracks')->get();
 
             return $this->success("All albums", $albums);
         }
@@ -29,7 +31,10 @@ class AlbumRepository implements AlbumRepositoryInterface
     function fetchOne(string $id): JsonResponse
     {
         try {
-            $album = Album::find($id);
+            $album = Album::query()->withCount('tracks')
+                            ->with(['tracks.features',
+                                    'tracks.owner',
+                                    'artist'])->find($id);
 
             if(!$album) return $this->error("No album found.", 404);
 
@@ -42,25 +47,45 @@ class AlbumRepository implements AlbumRepositoryInterface
     public function insert(array $data): JsonResponse
     {
         try {
-            $name = $data['name'];
+            if(!Artist::query()->find($data['artist_id']))  return $this->error('Provided artist does not exists', 422);
+
             $album = new Album();
-            $album->name = $name;
+            $album->name = $data['name'];
+            $album->release_year = $data['release_year'];
+            $album->cover = $data['cover'];
+            $album->artist_id = $data['artist_id'];
 
             $album->save();
 
-            return $this->success("Added album", $name, 201);
+            return $this->success("Added album", $data, 201);
         }
         catch (\Exception $exception) {
-            return $this->error("Server error", 500);
+            return $this->error($exception->getMessage(), 500);
         }
     }
 
     function delete(string $id): JsonResponse
     {
-        // TODO: Implement delete() method.
+        $album = Album::query()->find($id);
+
+        if(!$album) return $this->error("No album found", 404);
+
+        try {
+            DB::beginTransaction();
+
+            AlbumHelper::deleteAlbum($album);
+
+            DB::commit();
+
+            return $this->success("Deleted Album", 200);
+        }
+        catch (\Exception $exception) {
+            DB::rollBack();
+            return $this->error("Server error", 500);
+        }
     }
 
-    function update(string $id): JsonResponse
+    public function update(array $data, string $id): JsonResponse
     {
         // TODO: Implement update() method.
     }

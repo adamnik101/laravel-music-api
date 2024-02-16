@@ -24,10 +24,6 @@ class BaseController extends Controller
     {
         return $this->repository->fetchOne($id);
     }
-    public function update(string $id) : JsonResponse
-    {
-        return $this->repository->update($id);
-    }
     public function delete(string $id) : JsonResponse
     {
         return $this->repository->delete($id);

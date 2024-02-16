@@ -32,11 +32,11 @@ class PlaylistRepository implements PlaylistRepositoryInterface
 
         return $this->success("Playlist detail", $playlist);
     }
-    function insert(PlaylistRequest|FormRequest $request): JsonResponse
+    function insert(array $data): JsonResponse
     {
         try {
-            $title = $request->input('title');
-            $description = $request->input('description');
+            $title = $data['title'];
+            $description = $data['description'];
 
             $playlist = new Playlist();
             $playlist->title = $title;
@@ -46,7 +46,7 @@ class PlaylistRepository implements PlaylistRepositoryInterface
 
             $playlist->save();
 
-            return $this->success('Playlist added', $request->title, 201);
+            return $this->success('Playlist added', $data, 201);
         }
         catch (\Exception $exception) {
             Log::error($exception->getMessage());
@@ -73,7 +73,7 @@ class PlaylistRepository implements PlaylistRepositoryInterface
         }
     }
 
-    function update(string $id): JsonResponse
+    public function update(array $data, string $id): JsonResponse
     {
         // TODO: Implement update() method.
     }

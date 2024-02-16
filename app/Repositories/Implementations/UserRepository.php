@@ -45,7 +45,7 @@ class UserRepository implements UserRepositoryInterface
         }
     }
 
-    function insert(UserRequest|FormRequest $request)
+    function insert(array $data)
     {
         // TODO: Implement insert() method.
     }
@@ -72,7 +72,7 @@ class UserRepository implements UserRepositoryInterface
         }
     }
 
-    function update(string $id): JsonResponse
+    public function update(array $data, string $id): JsonResponse
     {
         // TODO: Implement update() method.
     }

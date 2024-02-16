@@ -25,4 +25,8 @@ class AuthController extends Controller
     {
         return $this->authRepository->register($request);
     }
+    function getToken() : string
+    {
+        return $this->authRepository->getToken();
+    }
 }

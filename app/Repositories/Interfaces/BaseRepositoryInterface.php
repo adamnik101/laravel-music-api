@@ -12,5 +12,5 @@ interface BaseRepositoryInterface
 
     function insert(array $data);
     function delete(string $id) : JsonResponse;
-    function update(string $id) : JsonResponse;
+    function update(array $data, string $id) : JsonResponse;
 }

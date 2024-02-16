@@ -9,4 +9,5 @@ interface AuthRepositoryInterface
 {
     function login(LoginRequest $request);
     function register(RegisterRequest $request);
+    function getToken() : string;
 }

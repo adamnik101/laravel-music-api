@@ -15,23 +15,23 @@ class UserHelper
         self::deleteUserTokens($userToDelete);
     }
 
-    public static function deletePlaylists(User $user)
+    public static function deletePlaylists(User $user): void
     {
         foreach ($user->playlists as $playlist) {
             PlaylistHelper::deletePlaylist($playlist);
         }
     }
-    public static function deleteLikedTracks(User $user)
+    public static function deleteLikedTracks(User $user): int
     {
         return $user->likedTracks()->detach();
     }
 
-    public static function deleteLikedAlbums(User $user)
+    public static function deleteLikedAlbums(User $user): int
     {
         return $user->likedAlbums()->detach();
     }
 
-    public static function deleteFollowings(User $user)
+    public static function deleteFollowings(User $user): int
     {
         return $user->followings()->detach();
     }

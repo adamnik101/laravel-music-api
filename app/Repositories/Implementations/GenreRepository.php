@@ -15,7 +15,7 @@ class GenreRepository implements GenreRepositoryInterface
 
     function fetchAll(): JsonResponse
     {
-        $genres = Genre::query()->paginate(10);
+        $genres = Genre::all();
 
         return $this->success('All genres', $genres);
     }
@@ -28,7 +28,7 @@ class GenreRepository implements GenreRepositoryInterface
 
         return $this->success("Genre detail", $genre);
     }
-    public function insert(GenreRequest|FormRequest $request)
+    public function insert(array $data)
     {
         // TODO: Implement insert() method.
     }
@@ -38,7 +38,7 @@ class GenreRepository implements GenreRepositoryInterface
         // TODO: Implement delete() method.
     }
 
-    function update(string $id): JsonResponse
+    public function update(array $data, string $id): JsonResponse
     {
         // TODO: Implement update() method.
     }

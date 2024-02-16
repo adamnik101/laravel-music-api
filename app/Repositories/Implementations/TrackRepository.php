@@ -28,7 +28,7 @@ class TrackRepository implements TrackRepositoryInterface
         return $this->success("Track detail", TrackSerializer::serialize($track));
     }
 
-    function insert(TrackRequest|FormRequest $request) : JsonResponse
+    function insert(array $data) : JsonResponse
     {
         // TODO: Implement insert() method.
     }
@@ -38,7 +38,7 @@ class TrackRepository implements TrackRepositoryInterface
         // TODO: Implement delete() method.
     }
 
-    function update(string $id): JsonResponse
+    public function update(array $data, string $id): JsonResponse
     {
         // TODO: Implement update() method.
     }
