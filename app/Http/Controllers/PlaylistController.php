@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\PlaylistRequest;
 use App\Repositories\Interfaces\BaseRepositoryInterface;
 use App\Repositories\Interfaces\PlaylistRepositoryInterface;
 use Illuminate\Http\Request;
@@ -12,5 +13,4 @@ class PlaylistController extends BaseController
     {
         parent::__construct($repository);
     }
-
 }

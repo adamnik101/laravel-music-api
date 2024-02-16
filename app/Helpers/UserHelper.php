@@ -7,17 +7,18 @@ class UserHelper
 {
     public static function deleteUserRelatedData(User $userToDelete): void
     {
+        self::deleteSettings($userToDelete);
         self::deletePlaylists($userToDelete);
         self::deleteLikedTracks($userToDelete);
         self::deleteLikedAlbums($userToDelete);
         self::deleteFollowings($userToDelete);
+        self::deleteUserTokens($userToDelete);
     }
 
     public static function deletePlaylists(User $user)
     {
         foreach ($user->playlists as $playlist) {
-            $playlist->tracks()->detach();
-            $playlist->delete();
+            PlaylistHelper::deletePlaylist($playlist);
         }
     }
     public static function deleteLikedTracks(User $user)
@@ -33,6 +34,21 @@ class UserHelper
     public static function deleteFollowings(User $user)
     {
         return $user->followings()->detach();
+    }
+
+    public static function deleteUser(User $user): bool
+    {
+        return $user->delete();
+    }
+
+    public static function deleteSettings(User $user): int
+    {
+        return $user->settings()->delete();
+    }
+
+    public static function deleteUserTokens(User $user): int
+    {
+        return $user->tokens()->delete();
     }
 
 }

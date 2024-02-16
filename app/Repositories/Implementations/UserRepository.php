@@ -8,7 +8,9 @@ use App\Models\User;
 use App\Repositories\Interfaces\UserRepositoryInterface;
 use App\Traits\ResponseAPI;
 use Illuminate\Http\JsonResponse;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Log;
 
 class UserRepository implements UserRepositoryInterface
 {
@@ -36,6 +38,7 @@ class UserRepository implements UserRepositoryInterface
             return $this->success("User Detail", $user);
         }
         catch (\Exception $exception) {
+            Log::error($exception->getMessage());
             return $this->error($exception->getMessage(), 500);
         }
     }
@@ -47,15 +50,19 @@ class UserRepository implements UserRepositoryInterface
             $userToDelete = User::query()->find($id);
 
             if(!$userToDelete) return $this->error('No user found', 400);
+            if ($userToDelete->id == Auth::user()->getAuthIdentifier()) return $this->error('Cannot delete your own account', 422);
 
             UserHelper::deleteUserRelatedData($userToDelete);
+
+            UserHelper::deleteUser($userToDelete);
 
             DB::commit();
 
             return $this->success('User deleted successfully.', $userToDelete, 200);
         }catch (\Exception $exception) {
             DB::rollBack();
-            return $this->error($exception->getMessage(), 500);
+            Log::critical($exception->getMessage());
+            return $this->error("Server error", 500);
         }
     }
 

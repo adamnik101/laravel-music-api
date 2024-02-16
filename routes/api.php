@@ -70,8 +70,12 @@ Route::whereUuid('id')->group(function () {
     Route::prefix('/playlists')->group(function () {
         Route::get('/', [PlaylistController::class, 'fetchAll']);
         Route::get('/{id}', [PlaylistController::class, 'fetchOne']);
-        Route::post('/{id}/update', [PlaylistController::class, 'update']);
-        Route::post('/{id}/delete', [PlaylistController::class, 'delete']);
+
+        Route::middleware(['auth:sanctum', 'ability:admin'])->group(function () {
+            Route::post('/', [PlaylistController::class, 'insert']);
+            Route::post('/{id}/update', [PlaylistController::class, 'update']);
+            Route::post('/{id}/delete', [PlaylistController::class, 'delete']);
+        });
     });
 });
 
