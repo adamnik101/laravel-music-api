@@ -2,9 +2,11 @@
 
 namespace App\Repositories\Implementations;
 
+use App\Http\Requests\GenreRequest;
 use App\Models\Genre;
 use App\Repositories\Interfaces\GenreRepositoryInterface;
 use App\Traits\ResponseAPI;
+use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Http\JsonResponse;
 
 class GenreRepository implements GenreRepositoryInterface
@@ -25,6 +27,10 @@ class GenreRepository implements GenreRepositoryInterface
         if(!$genre) return $this->error("No genre found.", 404);
 
         return $this->success("Genre detail", $genre);
+    }
+    public function insert(GenreRequest|FormRequest $request)
+    {
+        // TODO: Implement insert() method.
     }
 
     function delete(string $id): JsonResponse

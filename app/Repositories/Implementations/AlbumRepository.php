@@ -2,9 +2,11 @@
 
 namespace App\Repositories\Implementations;
 
+use App\Http\Requests\ArtistRequest;
 use App\Models\Album;
 use App\Repositories\Interfaces\AlbumRepositoryInterface;
 use App\Traits\ResponseAPI;
+use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Http\JsonResponse;
 
 class AlbumRepository implements AlbumRepositoryInterface
@@ -34,6 +36,10 @@ class AlbumRepository implements AlbumRepositoryInterface
         catch (\Exception $exception) {
             return $this->error($exception->getMessage(), $exception->getCode());
         }
+    }
+    public function insert(ArtistRequest|FormRequest $request)
+    {
+        // TODO: Implement insert() method.
     }
 
     function delete(string $id): JsonResponse

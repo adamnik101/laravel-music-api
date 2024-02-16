@@ -40,37 +40,42 @@ Route::whereUuid('id')->group(function () {
     Route::prefix('/albums')->group(function () {
         Route::get('/', [AlbumController::class, 'fetchAll']);
         Route::get('/{id}', [AlbumController::class, 'fetchOne']);
-        Route::post('/{id}/update', [AlbumController::class, 'update']);
-        Route::post('/{id}/delete', [AlbumController::class, 'delete']);
+        Route::middleware(['auth:sanctum', 'ability:admin'])->group(function () {
+            Route::post('/{id}/update', [AlbumController::class, 'update']);
+            Route::post('/{id}/delete', [AlbumController::class, 'delete']);
+        });
     });
 
     Route::prefix('/artists')->group(function () {
         Route::get('/', [ArtistController::class, 'fetchAll']);
         Route::get('/{id}', [ArtistController::class, 'fetchOne']);
-        Route::post('/{id}/update', [ArtistController::class, 'update']);
-        Route::post('/{id}/delete', [ArtistController::class, 'delete']);
+        Route::middleware(['auth:sanctum', 'ability:sanctum'])->group(function () {
+            Route::post('/{id}/update', [ArtistController::class, 'update']);
+            Route::post('/{id}/delete', [ArtistController::class, 'delete']);
+        });
     });
 
     Route::prefix('/tracks')->group(function () {
         Route::get('/', [TrackController::class, 'fetchAll']);
         Route::get('/{id}', [TrackController::class, 'fetchOne']);
-        Route::post('/{id}/update', [TrackController::class, 'update']);
-        Route::post('/{id}/delete', [TrackController::class, 'delete']);
-
+        Route::middleware(['auth:sanctum', 'ability:admin'])->group(function () {
+            Route::post('/{id}/update', [TrackController::class, 'update']);
+            Route::post('/{id}/delete', [TrackController::class, 'delete']);
+        });
     });
 
     Route::prefix('/genres')->group(function () {
         Route::get('/', [GenreController::class, 'fetchAll']);
         Route::get('/{id}', [GenreController::class, 'fetchOne']);
-        Route::post('/{id}/update', [GenreController::class, 'update']);
-        Route::post('/{id}/delete', [GenreController::class, 'delete']);
-
+        Route::middleware(['auth:sanctum', 'ability:admin'])->group(function () {
+            Route::post('/{id}/update', [GenreController::class, 'update']);
+            Route::post('/{id}/delete', [GenreController::class, 'delete']);
+        });
     });
 
     Route::prefix('/playlists')->group(function () {
         Route::get('/', [PlaylistController::class, 'fetchAll']);
         Route::get('/{id}', [PlaylistController::class, 'fetchOne']);
-
         Route::middleware(['auth:sanctum', 'ability:admin'])->group(function () {
             Route::post('/', [PlaylistController::class, 'insert']);
             Route::post('/{id}/update', [PlaylistController::class, 'update']);

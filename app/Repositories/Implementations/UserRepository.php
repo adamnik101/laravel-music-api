@@ -4,9 +4,11 @@ namespace App\Repositories\Implementations;
 
 use App\Helpers\PlaylistHelper;
 use App\Helpers\UserHelper;
+use App\Http\Requests\UserRequest;
 use App\Models\User;
 use App\Repositories\Interfaces\UserRepositoryInterface;
 use App\Traits\ResponseAPI;
+use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
@@ -43,6 +45,10 @@ class UserRepository implements UserRepositoryInterface
         }
     }
 
+    function insert(UserRequest|FormRequest $request)
+    {
+        // TODO: Implement insert() method.
+    }
     function delete(string $id): JsonResponse
     {
         try{
