@@ -22,10 +22,16 @@ class ArtistRepository implements ArtistRepositoryInterface
     function fetchOne(string $id): JsonResponse
     {
         $artist = Artist::query()
-            ->with(['tracks.features', 'tracks.owner', 'features', 'albums'])
+            ->with([
+                'tracks.features', 'tracks.owner', 'albums',
+                'features' => function ($query) {
+                    $query->with(['owner', 'album', 'features']);
+                }])
             ->withCount(['albums','tracks', 'features', 'followedBy'])->find($id);
 
         if (!$artist) return $this->error("No artist found", 404);
+
+        $artist->featured_albums = $artist->features->pluck('album')->filter()->unique()->values()->toArray();
 
         return $this->success("Artist detail", $artist);
     }

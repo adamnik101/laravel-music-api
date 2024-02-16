@@ -23,7 +23,6 @@ return new class extends Migration
             $table->foreignUuid('genre_id')->references('id')->on('genres');
 
             $table->softDeletesDatetime();
-            $table->softDeletesDatetime();
             $table->timestamps();
         });
     }

@@ -19,19 +19,19 @@ class TrackFactory extends Factory
      */
     public function definition(): array
     {
-        $owner = Artist::inRandomOrder()->first();
-        $album = Album::where("artist_id", $owner->id)->inRandomOrder()->first();
-        $genre = Genre::inRandomOrder()->first();
+        $owner = Artist::query()->inRandomOrder()->first();
+        $album = Album::query()->where("artist_id", $owner->id)->inRandomOrder()->first();
+        $genre = Genre::query()->inRandomOrder()->first();
         $title = ucfirst(fake()->word());
         return [
             "title" => $title,
             "path" => fake()->url(),
             "explicit" => fake()->boolean(),
             "owner_id" => $owner->id,
-            "album_id" => $album ? $album->id : null,
+            "album_id" => $album?->id,
             "genre_id" => $genre->id,
             "cover" => fake()->imageUrl(500, 500, null, false, $title),
-            "duration" => fake()->numberBetween(0, 1500)
+            "duration" => fake()->numberBetween(45, 360)
         ];
     }
 }

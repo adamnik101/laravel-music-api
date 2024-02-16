@@ -18,6 +18,7 @@ return new class extends Migration
             $table->string('description')->nullable();
             $table->string('image_url')->nullable();
             $table->foreignUuid('user_id')->references('id')->on('users');
+            $table->foreignUuid('genre_id')->nullable()->references('id')->on('genres');
 
             $table->softDeletesDatetime();
             $table->timestamps();

@@ -21,4 +21,9 @@ class UserController extends BaseController {
     {
         return $this->repository->update($request->validated(), $id);
     }
+
+    public function fetchUserLikedTracks()
+    {
+        return $this->repository->fetchUserLikedTracks();
+    }
 }

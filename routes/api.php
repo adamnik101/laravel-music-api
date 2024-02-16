@@ -29,6 +29,7 @@ Route::prefix('/auth')->group(function () {
    Route::post('/register', [AuthController::class, 'register']);
    Route::middleware(['auth:sanctum'])->group(function () {
       Route::get('/token', [AuthController::class, 'getToken']);
+      Route::get('me', [AuthController::class, 'getUser']);
    });
 });
 
@@ -38,6 +39,9 @@ Route::whereUuid('id')->group(function () {
         Route::get('/{id}', [UserController::class, 'fetchOne']);
         Route::post('/{id}/update', [UserController::class, 'update']);
         Route::post('/{id}/delete', [UserController::class, 'delete']);
+
+
+        Route::get('/me/liked', [UserController::class, 'fetchUserLikedTracks']);
     });
 
     Route::prefix('/albums')->group(function () {
@@ -79,9 +83,9 @@ Route::whereUuid('id')->group(function () {
     });
 
     Route::prefix('/playlists')->group(function () {
-        Route::get('/', [PlaylistController::class, 'fetchAll']);
         Route::get('/{id}', [PlaylistController::class, 'fetchOne']);
         Route::middleware(['auth:sanctum', 'ability:admin'])->group(function () {
+            Route::get('/', [PlaylistController::class, 'fetchAll']);
             Route::post('/', [PlaylistController::class, 'insert']);
             Route::post('/{id}/update', [PlaylistController::class, 'update']);
             Route::post('/{id}/delete', [PlaylistController::class, 'delete']);

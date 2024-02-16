@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Http\Requests\LoginRequest;
 use App\Http\Requests\RegisterRequest;
 use App\Repositories\Interfaces\AuthRepositoryInterface;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 
 class AuthController extends Controller
@@ -25,8 +26,13 @@ class AuthController extends Controller
     {
         return $this->authRepository->register($request);
     }
-    function getToken() : string
+    function getToken() : JsonResponse
     {
         return $this->authRepository->getToken();
+    }
+
+    function getUser() : JsonResponse
+    {
+        return $this->authRepository->getUser();
     }
 }

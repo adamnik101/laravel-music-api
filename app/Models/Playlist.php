@@ -13,9 +13,14 @@ class Playlist extends Model
     use HasFactory, HasUuids;
 
     public function tracks() : BelongsToMany {
-        return $this->belongsToMany(Track::class, 'playlist_track',);
+        return $this->belongsToMany(Track::class, 'playlist_track');
     }
     public function ownedBy() : BelongsTo {
         return $this->belongsTo(User::class);
+    }
+
+    public function genre() : BelongsTo
+    {
+        return $this->belongsTo(Genre::class);
     }
 }

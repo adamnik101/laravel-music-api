@@ -2,6 +2,7 @@
 
 namespace Database\Factories;
 
+use App\Models\Genre;
 use App\Models\User;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
@@ -18,12 +19,14 @@ class PlaylistFactory extends Factory
     public function definition(): array
     {
         $title = fake()->words(3, true);
-        $user = User::inRandomOrder()->first();
+        $user = User::query()->inRandomOrder()->first();
+        $genre = Genre::query()->inRandomOrder()->first();
         return [
             "title" => $title,
             "description" => fake()->text(),
             "image_url" => fake()->imageUrl(500, 500, null, false, $title),
-            "user_id" => $user->id
+            "user_id" => $user->id,
+            "genre_id" => $genre->id
         ];
     }
 }

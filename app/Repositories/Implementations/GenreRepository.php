@@ -8,6 +8,7 @@ use App\Repositories\Interfaces\GenreRepositoryInterface;
 use App\Traits\ResponseAPI;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Http\JsonResponse;
+use Illuminate\Support\Facades\Log;
 
 class GenreRepository implements GenreRepositoryInterface
 {
@@ -22,7 +23,7 @@ class GenreRepository implements GenreRepositoryInterface
 
     function fetchOne(string $id): JsonResponse
     {
-        $genre = Genre::query()->find($id);
+        $genre = Genre::query()->with('playlists')->find($id);
 
         if(!$genre) return $this->error("No genre found.", 404);
 
@@ -30,7 +31,18 @@ class GenreRepository implements GenreRepositoryInterface
     }
     public function insert(array $data)
     {
-        // TODO: Implement insert() method.
+        try {
+            $genre = new Genre();
+            $genre->name = $data['name'];
+
+            $genre->save();
+
+            return $this->success("Added genre", 201);
+        }
+        catch (\Exception $exception) {
+            Log::error($exception->getMessage());
+            return $this->error('Server error', 500);
+        }
     }
 
     function delete(string $id): JsonResponse

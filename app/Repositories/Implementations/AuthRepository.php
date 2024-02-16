@@ -69,11 +69,23 @@ class AuthRepository implements AuthRepositoryInterface
             return $this->error($exception->getMessage(), 500);
         }
     }
-    public function getToken(): string
+    public function getToken(): JsonResponse
     {
         $user = Auth::hasUser();
         if (!$user) return $this->error("Not authorized", 401);
 
-        return $this->success('API Token', $user);
+        return $this->success('Token', true);
+    }
+    public function getUser() : JsonResponse
+    {
+        $user = User::query()
+            ->withCount(['playlists', 'followings'])
+            ->with(['playlists', 'followings', 'likedTracks', 'likedAlbums', 'settings'])
+            ->find(Auth::user()->getAuthIdentifier());
+
+        if(!$user) return $this->error('Not authorized', 401);
+
+
+        return $this->success("User data", $user);
     }
 }

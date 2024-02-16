@@ -13,6 +13,9 @@ class Track extends Model
 {
     use HasFactory, HasUuids, SoftDeletes;
 
+    protected $casts = [
+        'explicit' => 'boolean'
+    ];
     public function owner() : BelongsTo
     {
         return $this->belongsTo(Artist::class);
