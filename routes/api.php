@@ -40,7 +40,8 @@ Route::whereUuid('id')->group(function () {
     Route::prefix('/albums')->group(function () {
         Route::get('/', [AlbumController::class, 'fetchAll']);
         Route::get('/{id}', [AlbumController::class, 'fetchOne']);
-        Route::middleware(['auth:sanctum', 'ability:admin'])->group(function () {
+        Route::middleware(['auth:sanctum'])->group(function () {
+            Route::post('', [AlbumController::class, 'insert']);
             Route::post('/{id}/update', [AlbumController::class, 'update']);
             Route::post('/{id}/delete', [AlbumController::class, 'delete']);
         });
@@ -49,7 +50,8 @@ Route::whereUuid('id')->group(function () {
     Route::prefix('/artists')->group(function () {
         Route::get('/', [ArtistController::class, 'fetchAll']);
         Route::get('/{id}', [ArtistController::class, 'fetchOne']);
-        Route::middleware(['auth:sanctum', 'ability:sanctum'])->group(function () {
+        Route::middleware(['auth:sanctum', 'ability:admin'])->group(function () {
+            Route::post('/', [ArtistController::class, 'insert']);
             Route::post('/{id}/update', [ArtistController::class, 'update']);
             Route::post('/{id}/delete', [ArtistController::class, 'delete']);
         });

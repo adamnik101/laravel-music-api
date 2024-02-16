@@ -24,10 +24,6 @@ class BaseController extends Controller
     {
         return $this->repository->fetchOne($id);
     }
-    public function insert(FormRequest $request)
-    {
-        return $this->repository->insert($request);
-    }
     public function update(string $id) : JsonResponse
     {
         return $this->repository->update($id);

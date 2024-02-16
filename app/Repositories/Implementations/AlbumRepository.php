@@ -2,8 +2,10 @@
 
 namespace App\Repositories\Implementations;
 
+use App\Http\Requests\AlbumRequest;
 use App\Http\Requests\ArtistRequest;
 use App\Models\Album;
+use App\Models\Artist;
 use App\Repositories\Interfaces\AlbumRepositoryInterface;
 use App\Traits\ResponseAPI;
 use Illuminate\Foundation\Http\FormRequest;
@@ -37,9 +39,20 @@ class AlbumRepository implements AlbumRepositoryInterface
             return $this->error($exception->getMessage(), $exception->getCode());
         }
     }
-    public function insert(ArtistRequest|FormRequest $request)
+    public function insert(array $data): JsonResponse
     {
-        // TODO: Implement insert() method.
+        try {
+            $name = $data['name'];
+            $album = new Album();
+            $album->name = $name;
+
+            $album->save();
+
+            return $this->success("Added album", $name, 201);
+        }
+        catch (\Exception $exception) {
+            return $this->error("Server error", 500);
+        }
     }
 
     function delete(string $id): JsonResponse

@@ -10,7 +10,7 @@ interface BaseRepositoryInterface
     function fetchAll() : JsonResponse;
     function fetchOne(string $id) : JsonResponse;
 
-    function insert(FormRequest $request);
+    function insert(array $data);
     function delete(string $id) : JsonResponse;
     function update(string $id) : JsonResponse;
 }

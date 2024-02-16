@@ -13,4 +13,9 @@ class PlaylistController extends BaseController
     {
         parent::__construct($repository);
     }
+
+    public function insert(PlaylistRequest $request)
+    {
+        return $this->repository->insert($request->validated());
+    }
 }

@@ -27,9 +27,21 @@ class ArtistRepository implements ArtistRepositoryInterface
 
         return $this->success("Artist detail", $artist);
     }
-    public function insert(ArtistRequest|FormRequest $request)
+    public function insert(array $data): JsonResponse
     {
-        // TODO: Implement insert() method.
+        try {
+            $name = $data['name'];
+            $cover = $data['cover'];
+            $artist = new Artist();
+            $artist->name = $name;
+            $artist->cover = $cover;
+            $artist->save();
+
+            return $this->success("Added artist", $name, 201);
+        }
+        catch (\Exception $exception) {
+            return $this->error( $exception->getMessage(), 500);
+        }
     }
 
     function delete(string $id): JsonResponse
