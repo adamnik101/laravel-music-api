@@ -17,4 +17,14 @@ class PlaylistHelper
     {
         return $playlist->tracks()->detach();
     }
+
+    public static function addTracks(Playlist $playlist, array $tracks)
+    {
+        foreach ($tracks as $track) {
+            $playlist->tracks()->attach($track, [
+                "created_at" => now(),
+                "updated_at" => now()
+            ]);
+        }
+    }
 }

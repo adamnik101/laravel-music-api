@@ -5,6 +5,8 @@ namespace App\Repositories\Implementations;
 use App\Helpers\PlaylistHelper;
 use App\Helpers\UserHelper;
 use App\Http\Requests\UserRequest;
+use App\Models\Album;
+use App\Models\Track;
 use App\Models\User;
 use App\Repositories\Interfaces\UserRepositoryInterface;
 use App\Traits\ResponseAPI;
@@ -86,5 +88,92 @@ class UserRepository implements UserRepositoryInterface
         $tracks = $user->likedTracks()->with('owner', 'features', 'album')->get();
 
         return $this->success('User liked tracks', $tracks);
+    }
+    public function fetchUserLikedAlbums(): JsonResponse
+    {
+        $user = User::query()->find(Auth::user()->getAuthIdentifier());
+
+        if (!$user) return $this->error('Not authorized', 401);
+
+        $albums = $user->likedAlbums()->get();
+
+        return $this->success('Fetch user liked albums', $albums);
+    }
+    public function fetchUserLikedArtists(): JsonResponse
+    {
+        // TODO: Implement fetchUserLikedArtists() method.
+    }
+
+    function saveTrack(string $track): JsonResponse
+    {
+        $trackExists = Track::query()->find($track);
+        if (!$trackExists) return $this->error('Track not found', 400);
+
+        $user = User::query()->find(Auth::user()->getAuthIdentifier());
+        if (!$user) return $this->error('User not found', 400);
+
+        $user->likedTracks()->syncWithoutDetaching([$track => [
+            "created_at" => now(),
+            "updated_at" => now()
+        ]]);
+        return $this->success("Added to Liked", $track);
+    }
+
+    function saveAlbum(string $album): JsonResponse
+    {
+        $user = User::query()->find(Auth::user()->getAuthIdentifier());
+        if (!$user) return $this->error('Not authorized', 401);
+
+        $user->likedAlbums()->syncWithoutDetaching([$album => [
+            'created_at' => now(),
+            'updated_at' => now()
+        ]]);
+
+        return $this->success("Added to Liked", $user->likedAlbums, 201);
+    }
+
+    function saveArtist(string $artist): JsonResponse
+    {
+        $user = User::query()->find(Auth::user()->getAuthIdentifier());
+
+        $user->followings()->syncWithoutDetaching([$artist => [
+            "created_at" => now(),
+            "updated_at" => now()
+        ]]);
+
+        return $this->success("Saved to Library", $artist, 201);
+    }
+    public function unsaveTrack(string $track): JsonResponse
+    {
+        $trackExists = Track::query()->find($track);
+        if (!$trackExists) return $this->error('Track not found', 400);
+
+        $user = User::query()->find(Auth::user()->getAuthIdentifier());
+        if (!$user) return $this->error('Not authorized', 401);
+
+        $user->likedTracks()->detach($track);
+
+        return $this->success('Unsaved track', $track, 204);
+    }
+    public function unsaveAlbum(string $album): JsonResponse
+    {
+        $user = User::query()->find(Auth::user()->getAuthIdentifier());
+        if (!$user) return $this->error('Not authorized', 401);
+
+        $albumExists = Album::query()->find($album);
+        if (!$albumExists) return $this->error('Track not found', 400);
+
+        $user->likedAlbums()->detach($album);
+
+        return $this->success('Unsaved album', $user->likedAlbums, 204);
+    }
+    public function unsaveArtist(string $artist): JsonResponse
+    {
+        $user = User::query()->find(Auth::user()->getAuthIdentifier());
+        if (!$user) return $this->error('Not authorized', 401);
+
+        $user->followings()->detach($artist);
+
+        return $this->success('Removed artist from library',null, 204);
     }
 }

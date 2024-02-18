@@ -12,6 +12,7 @@ use Illuminate\Http\JsonResponse;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
+use Laravel\Sanctum\PersonalAccessToken;
 
 class AuthRepository implements AuthRepositoryInterface
 {
@@ -74,7 +75,7 @@ class AuthRepository implements AuthRepositoryInterface
         $user = Auth::hasUser();
         if (!$user) return $this->error("Not authorized", 401);
 
-        return $this->success('Token', true);
+        return $this->success('Token', ['token' => $user]);
     }
     public function getUser() : JsonResponse
     {

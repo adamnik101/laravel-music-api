@@ -2,14 +2,10 @@
 
 namespace App\Http\Requests;
 
-use App\Traits\ResponseAPI;
-use Illuminate\Contracts\Validation\Validator;
 use Illuminate\Foundation\Http\FormRequest;
-use Illuminate\Http\Exceptions\HttpResponseException;
 
-class PlaylistRequest extends FormRequest
+class InsertTracksToPlaylistRequest extends FormRequest
 {
-    use ResponseAPI;
     /**
      * Determine if the user is authorized to make this request.
      */
@@ -26,15 +22,16 @@ class PlaylistRequest extends FormRequest
     public function rules(): array
     {
         return [
-            "title" => 'required|string|min:1|max:200',
-            "description" => 'nullable|string'
+            'tracks' =>'array',
+            'tracks.*' => 'uuid'
         ];
     }
 
-    protected function failedValidation(Validator $validator)
+    public function messages(): array
     {
-        throw new HttpResponseException(
-            $this->error("Validation error", 422, $validator->errors()->toArray())
-        );
+        return [
+          'tracks.array' => 'Must be an array of tracks',
+            'tracks.*.uuid' => 'You must provide an UUID'
+        ];
     }
 }

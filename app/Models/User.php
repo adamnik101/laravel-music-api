@@ -57,7 +57,7 @@ class User extends Authenticatable
         return $this->hasMany(Playlist::class);
     }
     public function likedTracks() : BelongsToMany {
-        return $this->belongsToMany(Track::class, 'track_user_likes');
+        return $this->belongsToMany(Track::class, 'track_user_likes')->withPivot('created_at')->orderByPivot('created_at', 'desc');
     }
     public function likedAlbums() : BelongsToMany {
         return $this->belongsToMany(Album::class, 'album_user_likes');

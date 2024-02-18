@@ -34,14 +34,25 @@ Route::prefix('/auth')->group(function () {
 });
 
 Route::whereUuid('id')->group(function () {
+    Route::prefix('/me')->middleware(['auth:sanctum'])->group(function () {
+        Route::get('/tracks', [UserController::class, 'fetchUserLikedTracks']);
+        Route::get('/albums', [UserController::class, 'fetchUserLikedAlbums']);
+        Route::get('/artists', [UserController::class, 'fetchUserLikedArtists']);
+
+        Route::post('/tracks', [UserController::class, 'saveTrack']);
+        Route::post('/albums', [UserController::class, 'saveAlbum']);
+        Route::post('/artists', [UserController::class, 'saveArtist']);
+
+        Route::delete('/tracks/{id}', [UserController::class, 'unsaveTrack']);
+        Route::delete('/albums/{id}', [UserController::class, 'unsaveAlbum']);
+        Route::delete('/artists/{id}', [UserController::class, 'unsaveArtist']);
+    });
+
     Route::prefix('/users')->middleware(['auth:sanctum', 'ability:admin'])->group(function () {
         Route::get('/', [UserController::class, 'fetchAll']);
         Route::get('/{id}', [UserController::class, 'fetchOne']);
         Route::post('/{id}/update', [UserController::class, 'update']);
         Route::post('/{id}/delete', [UserController::class, 'delete']);
-
-
-        Route::get('/me/liked', [UserController::class, 'fetchUserLikedTracks']);
     });
 
     Route::prefix('/albums')->group(function () {
@@ -88,7 +99,10 @@ Route::whereUuid('id')->group(function () {
             Route::get('/', [PlaylistController::class, 'fetchAll']);
             Route::post('/', [PlaylistController::class, 'insert']);
             Route::post('/{id}/update', [PlaylistController::class, 'update']);
-            Route::post('/{id}/delete', [PlaylistController::class, 'delete']);
+            Route::delete('/{id}', [PlaylistController::class, 'delete']);
+
+            Route::post('/{id}/tracks', [PlaylistController::class, 'insertTracks']);
+            Route::delete('/{id}/tracks/{track}', [PlaylistController::class, 'removeTrackFromPlaylist'])->where('track', '[0-9]*');
         });
     });
 });
