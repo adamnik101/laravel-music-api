@@ -7,15 +7,17 @@ use App\Repositories\Implementations\ArtistRepository;
 use App\Repositories\Implementations\AuthRepository;
 use App\Repositories\Implementations\GenreRepository;
 use App\Repositories\Implementations\PlaylistRepository;
+use App\Repositories\Implementations\SearchRepository;
 use App\Repositories\Implementations\TrackRepository;
 use App\Repositories\Implementations\UserRepository;
-use App\Repositories\Interfaces\AlbumRepositoryInterface;
-use App\Repositories\Interfaces\ArtistRepositoryInterface;
-use App\Repositories\Interfaces\AuthRepositoryInterface;
-use App\Repositories\Interfaces\GenreRepositoryInterface;
-use App\Repositories\Interfaces\PlaylistRepositoryInterface;
-use App\Repositories\Interfaces\TrackRepositoryInterface;
-use App\Repositories\Interfaces\UserRepositoryInterface;
+use App\Repositories\Interfaces\AlbumInterface;
+use App\Repositories\Interfaces\ArtistInterface;
+use App\Repositories\Interfaces\AuthInterface;
+use App\Repositories\Interfaces\GenreInterface;
+use App\Repositories\Interfaces\PlaylistInterface;
+use App\Repositories\Interfaces\SearchInterface;
+use App\Repositories\Interfaces\TrackInterface;
+use App\Repositories\Interfaces\UserInterface;
 use Illuminate\Support\ServiceProvider;
 
 class RepositoryServiceProvider extends ServiceProvider
@@ -25,13 +27,14 @@ class RepositoryServiceProvider extends ServiceProvider
      */
     public function register(): void
     {
-        $this->app->bind(UserRepositoryInterface::class, UserRepository::class);
-        $this->app->bind(AlbumRepositoryInterface::class, AlbumRepository::class);
-        $this->app->bind(TrackRepositoryInterface::class, TrackRepository::class);
-        $this->app->bind(GenreRepositoryInterface::class, GenreRepository::class);
-        $this->app->bind(PlaylistRepositoryInterface::class, PlaylistRepository::class);
-        $this->app->bind(ArtistRepositoryInterface::class, ArtistRepository::class);
-        $this->app->bind(AuthRepositoryInterface::class, AuthRepository::class);
+        $this->app->bind(UserInterface::class, UserRepository::class);
+        $this->app->bind(AlbumInterface::class, AlbumRepository::class);
+        $this->app->bind(TrackInterface::class, TrackRepository::class);
+        $this->app->bind(GenreInterface::class, GenreRepository::class);
+        $this->app->bind(PlaylistInterface::class, PlaylistRepository::class);
+        $this->app->bind(ArtistInterface::class, ArtistRepository::class);
+        $this->app->bind(AuthInterface::class, AuthRepository::class);
+        $this->app->bind(SearchInterface::class, SearchRepository::class);
     }
 
     /**

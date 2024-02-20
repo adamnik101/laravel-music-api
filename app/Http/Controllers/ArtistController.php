@@ -3,14 +3,14 @@
 namespace App\Http\Controllers;
 
 use App\Http\Requests\ArtistRequest;
-use App\Repositories\Interfaces\ArtistRepositoryInterface;
-use App\Repositories\Interfaces\BaseRepositoryInterface;
+use App\Repositories\Interfaces\ArtistInterface;
+use App\Repositories\Interfaces\BaseInterface;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 
 class ArtistController extends BaseController
 {
-    public function __construct(ArtistRepositoryInterface $repository)
+    public function __construct(ArtistInterface $repository)
     {
         parent::__construct($repository);
     }
@@ -22,5 +22,9 @@ class ArtistController extends BaseController
     public function update(ArtistRequest $request, string $id): JsonResponse
     {
         return $this->repository->update($request->validated(), $id);
+    }
+    public function trending() : JsonResponse
+    {
+        return $this->repository->trending();
     }
 }

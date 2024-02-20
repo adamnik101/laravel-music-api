@@ -25,13 +25,14 @@ class TrackFactory extends Factory
         $title = ucfirst(fake()->word());
         return [
             "title" => $title,
-            "path" => fake()->url(),
+            "path" => 'https://files.freemusicarchive.org/storage-freemusicarchive-org/tracks/NUw5dxZMgtizGOgK2GsRpnumKqvehxxbJo1PTujp.mp3', //fake path
             "explicit" => fake()->boolean(),
             "owner_id" => $owner->id,
             "album_id" => $album?->id,
             "genre_id" => $genre->id,
             "cover" => fake()->imageUrl(500, 500, null, false, $title),
-            "duration" => fake()->numberBetween(45, 360)
+            "duration" => fake()->numberBetween(45, 360),
+            "created_at" => fake()->dateTimeBetween('-1 years')
         ];
     }
 }

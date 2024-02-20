@@ -9,6 +9,7 @@ use App\Models\Track;
 use App\Models\User;
 use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
+use Illuminate\Support\Str;
 
 class UserSeeder extends Seeder
 {
@@ -23,14 +24,14 @@ class UserSeeder extends Seeder
 
             $user->settings()->save(Setting::factory()->makeOne());
 
-            $numberOfLikes = rand(0,10);
+            $numberOfLikes = rand(0,500);
             $tracks = null;
             if($numberOfLikes > 0) {
                 $tracks = Track::query()->inRandomOrder()->take($numberOfLikes)->get();
                 $user->likedTracks()->saveMany($tracks);
             }
 
-            $numberOfAlbums = rand(0,10);
+            $numberOfAlbums = rand(0,20);
             $albums = null;
             if($numberOfAlbums > 0) {
                 $albums = Album::query()->inRandomOrder()->take($numberOfAlbums)->get();
@@ -40,7 +41,7 @@ class UserSeeder extends Seeder
                 ]);
             }
 
-            $numberOfFollowings = rand(0, 10);
+            $numberOfFollowings = rand(0, 50);
             $followings = null;
             if($numberOfFollowings > 0) {
                 $followings = Artist::query()->inRandomOrder()->take($numberOfFollowings)->get();
@@ -48,6 +49,20 @@ class UserSeeder extends Seeder
                     "created_at" => now(),
                     "updated_at" => now()
                 ]);
+            }
+
+            $numberOfPlayedTracks = rand(0, 200);
+            $tracksPlayed = null;
+            if ($numberOfPlayedTracks > 0) {
+                $tracksPlayed = Track::query()->inRandomOrder()->take($numberOfPlayedTracks)->get();
+                $user->trackPlays()->createMany($tracksPlayed->map(function ($track) {
+                    return [
+                        // If you need any additional attributes in the pivot table, you can add them here
+                        'track_id' => $track->id,
+                        'created_at' => now(),
+                        'updated_at' => now()
+                    ];
+                })->toArray());
             }
         }
 

@@ -6,7 +6,7 @@ use App\Http\Requests\InsertTracksToPlaylistRequest;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Http\JsonResponse;
 
-interface BaseRepositoryInterface
+interface BaseInterface
 {
     function fetchAll() : JsonResponse;
     function fetchOne(string $id) : JsonResponse;

@@ -45,13 +45,13 @@ class User extends Authenticatable
      */
     protected $casts = [
         'email_verified_at' => 'datetime',
-        'password' => 'hashed'
+        'password' => 'hashed',
     ];
     public function role() : BelongsTo {
         return $this->belongsTo(Role::class);
     }
     public function settings() : HasOne {
-        return $this->hasOne(Setting::class);
+        return $this->hasOne(Setting::class)->withCasts(['explicit' => 'bool']);
     }
     public function playlists() : HasMany {
         return $this->hasMany(Playlist::class);
@@ -64,5 +64,9 @@ class User extends Authenticatable
     }
     public function followings() : BelongsToMany {
         return $this->belongsToMany(Artist::class, 'artist_user_followings');
+    }
+    public function trackPlays() : HasMany
+    {
+        return $this->hasMany(TrackPlay::class);
     }
 }

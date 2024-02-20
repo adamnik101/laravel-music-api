@@ -4,12 +4,12 @@ namespace App\Repositories\Interfaces;
 
 use App\Http\Requests\InsertTracksToPlaylistRequest;
 use App\Http\Requests\PlaylistRequest;
-use App\Repositories\Interfaces\BaseRepositoryInterface;
+use App\Repositories\Interfaces\BaseInterface;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Validation\Validator;
 
-interface PlaylistRepositoryInterface extends BaseRepositoryInterface
+interface PlaylistInterface extends BaseInterface
 {
     function insertTracks(array $trackIds, string $id, ?bool $confirm) : JsonResponse;
-    function removeTrackFromPlaylist(string $playlist, string $track);
+    function removeTrack(string $playlist, string $track);
 }

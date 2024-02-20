@@ -20,7 +20,7 @@ class TrackSeeder extends Seeder
         for ($i = 0; $i < $numberOfTracks; $i++) {
             $track = Track::factory()->create();
 
-            $numberOfFeatures = random_int(0, 4);
+            $numberOfFeatures = rand(0, 4);
             $artists = null;
 
             if($numberOfFeatures > 0) {

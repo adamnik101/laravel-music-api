@@ -7,21 +7,24 @@ use App\Http\Requests\AlbumRequest;
 use App\Http\Requests\ArtistRequest;
 use App\Models\Album;
 use App\Models\Artist;
-use App\Repositories\Interfaces\AlbumRepositoryInterface;
+use App\Models\Track;
+use App\Models\TrackPlay;
+use App\Repositories\Interfaces\AlbumInterface;
 use App\Traits\ResponseAPI;
+use Carbon\Carbon;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Support\Facades\DB;
 
-class AlbumRepository implements AlbumRepositoryInterface
+class AlbumRepository implements AlbumInterface
 {
     use ResponseAPI;
     function fetchAll(): JsonResponse
     {
         try {
-            $albums = Album::query()->withCount('tracks')->get();
+            $albums = Album::query()->with('artist')->withCount('tracks')->paginate();
 
-            return $this->success("All albums", $albums);
+            return $this->success("All albums with pagination", $albums);
         }
         catch (\Exception $exception) {
             return $this->error($exception->getMessage(), $exception->getCode());
@@ -32,9 +35,7 @@ class AlbumRepository implements AlbumRepositoryInterface
     {
         try {
             $album = Album::query()->withCount('tracks')
-                            ->with(['tracks.features',
-                                    'tracks.owner',
-                                    'artist'])->find($id);
+                            ->with(['artist', 'tracks'])->find($id);
 
             if(!$album) return $this->error("No album found.", 404);
 
@@ -88,5 +89,41 @@ class AlbumRepository implements AlbumRepositoryInterface
     public function update(array $data, string $id): JsonResponse
     {
         // TODO: Implement update() method.
+    }
+
+    public function newReleases() : JsonResponse
+    {
+        $newReleasedAlbums = Album::query()->withCount('tracks')->whereHas('tracks')->orderByDesc('created_at')->take(6)->get();
+
+        return $this->success('Album new releases', $newReleasedAlbums);
+    }
+    public function trending() : JsonResponse
+    {
+        $sevenDaysAgo = Carbon::now()->subDays(7);
+
+        $albums = Album::query()->selectRaw('artists.id as artist_id, artists.name as artist_name, COUNT(track_plays.track_id) as track_count, count(distinct tracks.id) as tracks_count, albums.id, albums.name, albums.cover, albums.release_year')
+            ->join('tracks', 'albums.id', '=', 'tracks.album_id')
+            ->join('track_plays', 'tracks.id', '=', 'track_plays.track_id')
+            ->join('artists', 'artists.id', '=', 'albums.artist_id')
+            ->whereBetween('track_plays.created_at', [$sevenDaysAgo, now()])
+            ->groupBy('albums.id', 'albums.name', 'albums.cover', 'albums.release_year', 'artists.id', 'artists.name')
+            ->orderByDesc(DB::raw('track_count'))
+            ->take(6)
+            ->get();
+
+        $serialize = [];
+        foreach ($albums as $album) {
+            $serialize[] = [
+                    'id' => $album->id,
+                    'name' => $album->name,
+                    'cover' => $album->cover,
+                    'tracks_count' => $album->tracks_count,
+                    'artist' => [
+                        'id' => $album->artist_id,
+                        'name' => $album->artist_name]
+
+            ];
+        }
+        return $this->success('Trending albums', $serialize);
     }
 }

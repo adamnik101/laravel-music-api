@@ -2,13 +2,14 @@
 
 namespace App\Repositories\Implementations;
 
+use App\Helpers\ImageHelper;
 use App\Helpers\PlaylistHelper;
 use App\Http\Requests\InsertTracksToPlaylistRequest;
 use App\Http\Requests\PlaylistRequest;
 use App\Models\Playlist;
 use App\Models\Track;
 use App\Models\User;
-use App\Repositories\Interfaces\PlaylistRepositoryInterface;
+use App\Repositories\Interfaces\PlaylistInterface;
 use App\Traits\ResponseAPI;
 use Illuminate\Auth\Access\AuthorizationException;
 use Illuminate\Foundation\Http\FormRequest;
@@ -17,7 +18,7 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 
-class PlaylistRepository implements PlaylistRepositoryInterface
+class PlaylistRepository implements PlaylistInterface
 {
     use ResponseAPI;
     function fetchAll(): JsonResponse
@@ -38,11 +39,7 @@ class PlaylistRepository implements PlaylistRepositoryInterface
 
     function fetchOne(string $id): JsonResponse
     {
-        $playlist = Playlist::query()->withCount('tracks')
-            ->with(['tracks' => function ($query) {
-                $query->with(['owner', 'features', 'album']);
-            }])
-            ->find($id);
+        $playlist = Playlist::query()->with('tracks')->withCount('tracks')->find($id);
 
         if (!$playlist) return $this->error("No playlist found.", 404);
 
@@ -55,11 +52,15 @@ class PlaylistRepository implements PlaylistRepositoryInterface
         try {
             $title = $data['title'];
             $description = $data['description'] ?? null;
+            $image = $data['image'] ?? null;
+
 
             $playlist = new Playlist();
             $playlist->title = $title;
             $playlist->user_id = Auth::user()->getAuthIdentifier();
-
+            if ($image) {
+                $playlist->image_url = ImageHelper::uploadImage($image);
+            }
             if($description) $playlist->description = $description;
 
             $playlist->save();
@@ -160,7 +161,7 @@ class PlaylistRepository implements PlaylistRepositoryInterface
         return $this->success("Added tracks", $playlist, 201);
     }
 
-    public function removeTrackFromPlaylist(string $playlist, string $track)
+    public function removeTrack(string $playlist, string $track): JsonResponse
     {
         $playlist = Playlist::query()->find($playlist);
 

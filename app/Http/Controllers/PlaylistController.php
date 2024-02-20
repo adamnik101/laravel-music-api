@@ -4,14 +4,14 @@ namespace App\Http\Controllers;
 
 use App\Http\Requests\InsertTracksToPlaylistRequest;
 use App\Http\Requests\PlaylistRequest;
-use App\Repositories\Interfaces\BaseRepositoryInterface;
-use App\Repositories\Interfaces\PlaylistRepositoryInterface;
+use App\Repositories\Interfaces\BaseInterface;
+use App\Repositories\Interfaces\PlaylistInterface;
 use Illuminate\Http\Request;
 use Symfony\Component\HttpFoundation\JsonResponse;
 
 class PlaylistController extends BaseController
 {
-    public function __construct(PlaylistRepositoryInterface $repository)
+    public function __construct(PlaylistInterface $repository)
     {
         parent::__construct($repository);
     }
@@ -31,8 +31,8 @@ class PlaylistController extends BaseController
         return $this->repository->insertTracks($request->validated('tracks'), $id, $request->get('confirm'));
     }
 
-    public function removeTrackFromPlaylist(string $playlist, string $track)
+    public function removeTrack(string $playlist, string $track)
     {
-        return $this->repository->removeTrackFromPlaylist($playlist, $track);
+        return $this->repository->removeTrack($playlist, $track);
     }
 }

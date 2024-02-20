@@ -3,16 +3,16 @@
 namespace App\Http\Controllers;
 
 use App\Http\Requests\PlaylistRequest;
-use App\Repositories\Interfaces\BaseRepositoryInterface;
+use App\Repositories\Interfaces\BaseInterface;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 
 class BaseController extends Controller
 {
-    protected BaseRepositoryInterface $repository;
+    protected BaseInterface $repository;
 
-    public function __construct(BaseRepositoryInterface $repository)
+    public function __construct(BaseInterface $repository)
     {
         $this->repository = $repository;
     }

@@ -2,22 +2,19 @@
 
 namespace App\Repositories\Implementations;
 
-use App\Helpers\PlaylistHelper;
 use App\Helpers\UserHelper;
-use App\Http\Requests\UserRequest;
 use App\Models\Album;
 use App\Models\Track;
+use App\Models\TrackPlay;
 use App\Models\User;
-use App\Repositories\Interfaces\UserRepositoryInterface;
+use App\Repositories\Interfaces\UserInterface;
 use App\Traits\ResponseAPI;
-use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
-use function Symfony\Component\String\u;
 
-class UserRepository implements UserRepositoryInterface
+class UserRepository implements UserInterface
 {
     use ResponseAPI;
 
@@ -85,7 +82,7 @@ class UserRepository implements UserRepositoryInterface
         $user = User::query()->find(Auth::user()->getAuthIdentifier());
         if (!$user) return $this->error('Not authorized', 401);
 
-        $tracks = $user->likedTracks()->with('owner', 'features', 'album')->get();
+        $tracks = $user->likedTracks()->get();
 
         return $this->success('User liked tracks', $tracks);
     }
@@ -101,7 +98,24 @@ class UserRepository implements UserRepositoryInterface
     }
     public function fetchUserLikedArtists(): JsonResponse
     {
-        // TODO: Implement fetchUserLikedArtists() method.
+        $user = User::query()->with('followings')->find(Auth::user()->getAuthIdentifier());
+
+        if(!$user) return $this->error('Not authorized', 401);
+
+        return $this->success('Fetch user followings', $user->followings);
+    }
+    public function fetchRecentlyPlayedTracks(): JsonResponse
+    {
+        $user = \auth('sanctum')->user();
+
+        $tracks = TrackPlay::query()->where('user_id', $user->getAuthIdentifier())
+            ->select('track_id', DB::raw('MAX(created_at) as latest_play'))
+            ->orderByDesc('latest_play')
+            ->groupBy("track_id")
+            ->with(['track.owner', 'track.features', 'track.album'])
+            ->take(5)->get()->pluck('track');
+
+        return $this->success('Recently played tracks for user', $tracks);
     }
 
     function saveTrack(string $track): JsonResponse
@@ -175,5 +189,16 @@ class UserRepository implements UserRepositoryInterface
         $user->followings()->detach($artist);
 
         return $this->success('Removed artist from library',null, 204);
+    }
+    public function updateSettings(array $data) : JsonResponse
+    {
+        $user = User::query()->with('settings')->find(Auth::user()->getAuthIdentifier());
+        if (!$user) return $this->error('Not authorized', 401);
+
+        $user->settings()->update([
+            'explicit' => $data['value']
+        ]);
+
+        return $this->success('Updated settings', ['id' => $user->settings->id, 'explicit' => $data['value']]);
     }
 }

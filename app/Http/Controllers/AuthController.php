@@ -4,15 +4,15 @@ namespace App\Http\Controllers;
 
 use App\Http\Requests\LoginRequest;
 use App\Http\Requests\RegisterRequest;
-use App\Repositories\Interfaces\AuthRepositoryInterface;
+use App\Repositories\Interfaces\AuthInterface;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 
 class AuthController extends Controller
 {
-    private AuthRepositoryInterface $authRepository;
+    private AuthInterface $authRepository;
 
-    function __construct(AuthRepositoryInterface $authRepository)
+    function __construct(AuthInterface $authRepository)
     {
         $this->authRepository = $authRepository;
     }
@@ -34,5 +34,9 @@ class AuthController extends Controller
     function getUser() : JsonResponse
     {
         return $this->authRepository->getUser();
+    }
+    function logout() : JsonResponse
+    {
+        return $this->authRepository->logout();
     }
 }

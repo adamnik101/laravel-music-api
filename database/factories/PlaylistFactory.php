@@ -18,7 +18,7 @@ class PlaylistFactory extends Factory
      */
     public function definition(): array
     {
-        $title = fake()->words(3, true);
+        $title = fake()->words(fake()->numberBetween(1,3), true);
         $user = User::query()->inRandomOrder()->first();
         $genre = Genre::query()->inRandomOrder()->first();
         return [

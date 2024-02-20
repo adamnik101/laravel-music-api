@@ -4,13 +4,13 @@ namespace App\Repositories\Implementations;
 
 use App\Http\Requests\GenreRequest;
 use App\Models\Genre;
-use App\Repositories\Interfaces\GenreRepositoryInterface;
+use App\Repositories\Interfaces\GenreInterface;
 use App\Traits\ResponseAPI;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Support\Facades\Log;
 
-class GenreRepository implements GenreRepositoryInterface
+class GenreRepository implements GenreInterface
 {
     use ResponseAPI;
 

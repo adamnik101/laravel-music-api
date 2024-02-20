@@ -27,14 +27,16 @@ class PlaylistRequest extends FormRequest
     {
         return [
             "title" => 'required|string|min:1|max:200',
-            "description" => 'nullable|string'
+            "description" => 'nullable|string',
+            "image" => 'nullable|image|mimes:jpeg,png,jpg,gif|dimensions:min_width=100,min_height=100,max_width=1000,max_height=1000',
+
         ];
     }
 
     protected function failedValidation(Validator $validator)
     {
         throw new HttpResponseException(
-            $this->error("Validation error", 422, $validator->errors()->toArray())
+            $this->error($validator->errors()->first(), 422)
         );
     }
 }

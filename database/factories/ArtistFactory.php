@@ -16,9 +16,10 @@ class ArtistFactory extends Factory
      */
     public function definition(): array
     {
+        $name = fake()->firstName();
         return [
-            "name" => fake()->name,
-            "cover" => fake()->imageUrl(500, 500, null, false)
+            "name" => $name,
+            "cover" => fake()->imageUrl(500, 500, null, false, $name)
         ];
     }
 }

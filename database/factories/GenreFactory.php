@@ -17,7 +17,7 @@ class GenreFactory extends Factory
     public function definition(): array
     {
         return [
-            "name" => fake()->name,
+            "name" => ucfirst(fake()->word()),
             "cover" => fake()->imageUrl(500, 500, null, false),
             "hex_color" => fake()->hexColor()
         ];
