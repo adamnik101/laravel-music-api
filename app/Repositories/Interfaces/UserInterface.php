@@ -18,4 +18,5 @@ interface UserInterface extends BaseInterface
     function unsaveAlbum(string $album) : JsonResponse;
     function unsaveArtist(string $artist) : JsonResponse;
     function updateSettings(array $data) : JsonResponse;
+    function updateUsername(string $username) : JsonResponse;
 }

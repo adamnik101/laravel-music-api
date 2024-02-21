@@ -52,6 +52,7 @@ Route::whereUuid('id')->group(function () {
         Route::delete('/artists/{id}', [UserController::class, 'unsaveArtist']);
 
         Route::post('/settings', [UserController::class, 'updateSettings']);
+        Route::patch('/username', [UserController::class, 'updateUsername']);
     });
 
     Route::prefix('/users')->middleware(['auth:sanctum', 'ability:admin'])->group(function () {

@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Http\Requests\SingleUuidRequest;
 use App\Http\Requests\UpdateSettingsRequest;
+use App\Http\Requests\UpdateUsernameRequest;
 use App\Http\Requests\UserRequest;
 use App\Repositories\Interfaces\UserInterface;
 use Illuminate\Http\JsonResponse;
@@ -69,5 +70,9 @@ class UserController extends BaseController {
     public function updateSettings(UpdateSettingsRequest $request): JsonResponse
     {
         return $this->repository->updateSettings($request->validated());
+    }
+    public function updateUsername(UpdateUsernameRequest $request) : JsonResponse
+    {
+        return $this->repository->updateUsername($request->validated('username'));
     }
 }

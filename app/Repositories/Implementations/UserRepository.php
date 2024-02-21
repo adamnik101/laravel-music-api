@@ -201,4 +201,15 @@ class UserRepository implements UserInterface
 
         return $this->success('Updated settings', ['id' => $user->settings->id, 'explicit' => $data['value']]);
     }
+
+    public function updateUsername(string $username) : JsonResponse
+    {
+        $user = User::query()->find(Auth::user()->getAuthIdentifier());
+
+        $user->username = $username;
+
+        $user->save();
+
+        return $this->success('Updated username', $user);
+    }
 }
