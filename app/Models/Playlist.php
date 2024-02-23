@@ -12,6 +12,8 @@ class Playlist extends Model
 {
     use HasFactory, HasUuids;
 
+    protected $fillable = ['title', 'description', 'updated_at'];
+
     public function tracks() : BelongsToMany {
         return $this->belongsToMany(Track::class, 'playlist_track')->withPivot(['id','created_at'])->orderByPivot('created_at');
     }

@@ -26,7 +26,7 @@ class PlaylistRequest extends FormRequest
     public function rules(): array
     {
         return [
-            "title" => 'required|string|min:1|max:200',
+            "title" => 'required|string|min:1|max:100',
             "description" => 'nullable|string',
             "image" => 'nullable|image|mimes:jpeg,png,jpg,gif|dimensions:min_width=100,min_height=100,max_width=1000,max_height=1000',
 

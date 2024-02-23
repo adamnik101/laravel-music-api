@@ -98,14 +98,18 @@ class PlaylistRepository implements PlaylistInterface
 
         if (!$playlist) return $this->error('Playlist not found', 400);
 
-        if (isset($data['title'])) {
-            $playlist->title = $data['title'];
+        $hasImage = isset($data['image']);
+
+        if ($hasImage) {
+            $image = $data['image'];
+            $image_url = ImageHelper::uploadImage($image);
         }
-
-        $playlist->description = null;
-
-        if (isset($data['description'])) $playlist->description = $data['description'];
-        $playlist->setUpdatedAt(now());
+        $playlist->title  = $data['title'];
+        $playlist->description = $data['description'];
+        if ($hasImage) {
+            $playlist->image_url = $image_url;
+        }
+        $playlist->updated_at = now();
 
         $playlist->save();
 
