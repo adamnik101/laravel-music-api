@@ -4,6 +4,7 @@ namespace App\Repositories\Interfaces;
 
 use App\Http\Requests\UpdateSettingsRequest;
 use Illuminate\Http\JsonResponse;
+use Illuminate\Http\UploadedFile;
 
 interface UserInterface extends BaseInterface
 {
@@ -19,4 +20,5 @@ interface UserInterface extends BaseInterface
     function unsaveArtist(string $artist) : JsonResponse;
     function updateSettings(array $data) : JsonResponse;
     function updateUsername(string $username) : JsonResponse;
+    function updateCover(UploadedFile $file) : JsonResponse;
 }

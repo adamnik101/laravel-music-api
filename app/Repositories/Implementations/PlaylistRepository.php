@@ -43,7 +43,7 @@ class PlaylistRepository implements PlaylistInterface
 
         if (!$playlist) return $this->error("No playlist found.", 404);
 
-        $playlist->latest_added = $playlist->tracks->last() ? $playlist->tracks->last()->pivot->created_at : $playlist->created_at;
+        $playlist->latest_added = $playlist->tracks->last() ? $playlist->tracks->last()->pivot->created_at : $playlist->updated_at;
 
         return $this->success("Playlist detail", $playlist);
     }
@@ -94,7 +94,22 @@ class PlaylistRepository implements PlaylistInterface
 
     public function update(array $data, string $id): JsonResponse
     {
-        // TODO: Implement update() method.
+        $playlist = Playlist::query()->where('user_id', '=', Auth::user()->getAuthIdentifier())->find($id);
+
+        if (!$playlist) return $this->error('Playlist not found', 400);
+
+        if (isset($data['title'])) {
+            $playlist->title = $data['title'];
+        }
+
+        $playlist->description = null;
+
+        if (isset($data['description'])) $playlist->description = $data['description'];
+        $playlist->setUpdatedAt(now());
+
+        $playlist->save();
+
+        return $this->success('Updated playlist', $playlist, 201);
     }
 
     public function insertTracks(array $trackIds, string $id, ?bool $confirm): JsonResponse
@@ -166,6 +181,12 @@ class PlaylistRepository implements PlaylistInterface
         $playlist = Playlist::query()->find($playlist);
 
         if (!$playlist) return $this->error('Playlist not found', 400);
+
+        $user = Auth::user()->getAuthIdentifier();
+
+        $userOwnsPlaylist = $playlist->where('user_id', '=', $user)->first();
+
+        if (!$userOwnsPlaylist) return $this->error('Not authorized', 401);
 
         $trackToDetach = $playlist->tracks()->wherePivot('id', $track)->first();
 

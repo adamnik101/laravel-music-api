@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\AdminController;
 use App\Http\Controllers\AlbumController;
 use App\Http\Controllers\ArtistController;
 use App\Http\Controllers\AuthController;
@@ -53,6 +54,7 @@ Route::whereUuid('id')->group(function () {
 
         Route::post('/settings', [UserController::class, 'updateSettings']);
         Route::patch('/username', [UserController::class, 'updateUsername']);
+        Route::post('/cover', [UserController::class, 'updateCover']);
     });
 
     Route::prefix('/users')->middleware(['auth:sanctum', 'ability:admin'])->group(function () {
@@ -116,12 +118,16 @@ Route::whereUuid('id')->group(function () {
         Route::middleware(['auth:sanctum'])->group(function () {
             Route::get('/', [PlaylistController::class, 'fetchAll']);
             Route::post('/', [PlaylistController::class, 'insert']);
-            Route::post('/{id}/update', [PlaylistController::class, 'update']);
+            Route::patch('/{id}', [PlaylistController::class, 'update']);
             Route::delete('/{id}', [PlaylistController::class, 'delete']);
 
             Route::post('/{id}/tracks', [PlaylistController::class, 'insertTracks']);
             Route::delete('/{id}/tracks/{track}', [PlaylistController::class, 'removeTrack'])->where('track', '[0-9]*');
         });
+    });
+
+    Route::prefix('/admin')->group(function () {
+       Route::get('/dashboard', [AdminController::class, 'dashboard']);
     });
 });
 

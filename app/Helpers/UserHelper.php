@@ -50,5 +50,4 @@ class UserHelper
     {
         return $user->tokens()->delete();
     }
-
 }

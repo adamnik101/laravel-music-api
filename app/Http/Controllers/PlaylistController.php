@@ -21,7 +21,7 @@ class PlaylistController extends BaseController
         return $this->repository->insert($request->validated());
     }
 
-    public function update(PlaylistRequest $request, string $id): JsonResponse
+    public function update(string $id,PlaylistRequest $request): JsonResponse
     {
         return $this->repository->update($request->validated(), $id);
     }

@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\ImageRequest;
 use App\Http\Requests\SingleUuidRequest;
 use App\Http\Requests\UpdateSettingsRequest;
 use App\Http\Requests\UpdateUsernameRequest;
@@ -74,5 +75,9 @@ class UserController extends BaseController {
     public function updateUsername(UpdateUsernameRequest $request) : JsonResponse
     {
         return $this->repository->updateUsername($request->validated('username'));
+    }
+    public function updateCover(ImageRequest $request) : JsonResponse
+    {
+        return $this->repository->updateCover($request->validated('image'));
     }
 }

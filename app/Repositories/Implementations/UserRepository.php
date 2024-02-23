@@ -2,6 +2,7 @@
 
 namespace App\Repositories\Implementations;
 
+use App\Helpers\ImageHelper;
 use App\Helpers\UserHelper;
 use App\Models\Album;
 use App\Models\Track;
@@ -9,7 +10,9 @@ use App\Models\TrackPlay;
 use App\Models\User;
 use App\Repositories\Interfaces\UserInterface;
 use App\Traits\ResponseAPI;
+use Illuminate\Http\File;
 use Illuminate\Http\JsonResponse;
+use Illuminate\Http\UploadedFile;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
@@ -211,5 +214,18 @@ class UserRepository implements UserInterface
         $user->save();
 
         return $this->success('Updated username', $user);
+    }
+    public function updateCover(UploadedFile $file): JsonResponse
+    {
+        $user = User::query()->find(Auth::user()->getAuthIdentifier());
+
+        if (!$user) return $this->error('Not authorized', 401);
+
+        $path = ImageHelper::uploadImage($file);
+        $user->cover = $path;
+
+        $user->save();
+
+        return $this->success('Updated profile image', $user);
     }
 }

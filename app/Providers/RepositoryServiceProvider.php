@@ -2,6 +2,7 @@
 
 namespace App\Providers;
 
+use App\Repositories\Implementations\AdminRepository;
 use App\Repositories\Implementations\AlbumRepository;
 use App\Repositories\Implementations\ArtistRepository;
 use App\Repositories\Implementations\AuthRepository;
@@ -10,6 +11,7 @@ use App\Repositories\Implementations\PlaylistRepository;
 use App\Repositories\Implementations\SearchRepository;
 use App\Repositories\Implementations\TrackRepository;
 use App\Repositories\Implementations\UserRepository;
+use App\Repositories\Interfaces\AdminInterface;
 use App\Repositories\Interfaces\AlbumInterface;
 use App\Repositories\Interfaces\ArtistInterface;
 use App\Repositories\Interfaces\AuthInterface;
@@ -35,6 +37,7 @@ class RepositoryServiceProvider extends ServiceProvider
         $this->app->bind(ArtistInterface::class, ArtistRepository::class);
         $this->app->bind(AuthInterface::class, AuthRepository::class);
         $this->app->bind(SearchInterface::class, SearchRepository::class);
+        $this->app->bind(AdminInterface::class, AdminRepository::class);
     }
 
     /**
