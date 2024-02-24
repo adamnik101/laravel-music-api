@@ -96,19 +96,21 @@ class PlaylistRepository implements PlaylistInterface
     {
         $playlist = Playlist::query()->where('user_id', '=', Auth::user()->getAuthIdentifier())->find($id);
 
-        if (!$playlist) return $this->error('Playlist not found', 400);
+        if (!$playlist) return $this->error('Not authorized', 401);
 
         $hasImage = isset($data['image']);
 
         if ($hasImage) {
             $image = $data['image'];
             $image_url = ImageHelper::uploadImage($image);
-        }
-        $playlist->title  = $data['title'];
-        $playlist->description = $data['description'];
-        if ($hasImage) {
             $playlist->image_url = $image_url;
         }
+        else if (isset($data['remove_image'])){
+            $playlist->image_url = null;
+        }
+
+        $playlist->title  = $data['title'];
+        $playlist->description = $data['description'];
         $playlist->updated_at = now();
 
         $playlist->save();
