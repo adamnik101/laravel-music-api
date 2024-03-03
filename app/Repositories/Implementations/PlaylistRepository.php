@@ -141,7 +141,7 @@ class PlaylistRepository implements PlaylistInterface
                 PlaylistHelper::addTracks($playlist, $trackIds);
                 DB::commit();
 
-                return $this->success("Added tracks", $successResponse,201);
+                return $this->success("Added ".count($trackIds)." tracks", $successResponse,201);
             }
             catch (\Exception $exception) {
                 DB::rollBack();
@@ -179,7 +179,7 @@ class PlaylistRepository implements PlaylistInterface
             return $this->error("Already added", 422, $errorResponse);
         }
 
-        return $this->success("Added tracks", $playlist, 201);
+        return $this->success("Added track", $playlist, 201);
     }
 
     public function removeTrack(string $playlist, string $track): JsonResponse

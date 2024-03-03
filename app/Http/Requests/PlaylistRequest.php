@@ -33,6 +33,16 @@ class PlaylistRequest extends FormRequest
         ];
     }
 
+    public function messages()
+    {
+        return [
+          'title.required' => 'Title is required.',
+          'title.string' => 'Title must be a string.',
+            'description.string' => 'Description must be a string.',
+            'image.image' => 'Image is invalid.',
+            'image.dimensions' => 'Image dimensions are out of range.',
+        ];
+    }
     protected function failedValidation(Validator $validator)
     {
         throw new HttpResponseException(

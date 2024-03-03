@@ -2,6 +2,9 @@
 
 namespace App\Repositories\Implementations;
 
+use App\Helpers\ImageHelper;
+use App\Helpers\TrackHelper;
+use App\Helpers\UserHelper;
 use App\Http\Requests\TrackRequest;
 use App\Models\Track;
 use App\Models\TrackPlay;
@@ -13,6 +16,8 @@ use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Log;
+use wapmorgan\Mp3Info\Mp3Info;
 
 class TrackRepository implements TrackInterface
 {
@@ -42,12 +47,52 @@ class TrackRepository implements TrackInterface
 
     function insert(array $data) : JsonResponse
     {
-        // TODO: Implement insert() method.
+        try {
+            DB::beginTransaction();
+            $imagePath = ImageHelper::uploadImage($data['cover']);
+            $trackPath = TrackHelper::saveTrackFile($data['track']);
+            $duration = TrackHelper::getTrackDurationInSeconds($trackPath);
+
+            $newTrack = new Track([
+                'title' => $data['title'],
+                'cover' => $imagePath,
+                'path' => $trackPath,
+                'genre_id' => $data['genre'],
+                'explicit' => $data['explicit'],
+                'album_id' => $data['album'] ?? null,
+                'owner_id' => $data['owner'],
+                'duration' => $duration
+            ]);
+            $newTrack->save();
+
+            if (isset($data['features'])) {
+                foreach ($data['features'] as $feature) {
+                    $newTrack->features()->attach([
+                        'artist_id' =>$feature
+                    ]);
+                }
+            }
+            DB::commit();
+
+            return $this->success('Added new track', $trackPath, 201);
+
+        }
+        catch (\Exception $exception) {
+            DB::rollBack();
+            Log::error($exception);
+            return $this->error('Unexpected error, try again later.', 500);
+        }
+
     }
 
     function delete(string $id): JsonResponse
     {
-        // TODO: Implement delete() method.
+        $trackToDelete = Track::query()->find($id);
+        if (!$trackToDelete) return $this->error('Not found', 400);
+
+        $trackToDelete->delete();
+        TrackPlay::query()->where('track_id', '=', $id)->delete();
+        return $this->success('Deleted track', null, 204);
     }
 
     public function update(array $data, string $id): JsonResponse

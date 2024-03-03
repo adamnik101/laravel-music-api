@@ -97,10 +97,11 @@ Route::whereUuid('id')->group(function () {
         Route::get('/trending', [TrackController::class, 'trending']);
         Route::get('/new-releases', [TrackController::class, 'newReleases']);
 
-        Route::middleware(['auth:sanctum', 'ability:admin'])->group(function () {
+        Route::middleware(['auth:sanctum'])->group(function () {
+            Route::post('/', [TrackController::class, 'insert']);
             Route::get('/search', [SearchController::class, 'searchTracks']);
             Route::post('/{id}/update', [TrackController::class, 'update']);
-            Route::post('/{id}/delete', [TrackController::class, 'delete']);
+            Route::delete('/{id}', [TrackController::class, 'delete']);
         });
     });
 

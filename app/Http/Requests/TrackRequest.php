@@ -6,6 +6,7 @@ use App\Traits\ResponseAPI;
 use Illuminate\Contracts\Validation\Validator;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Http\Exceptions\HttpResponseException;
+use Illuminate\Support\Facades\Auth;
 
 class TrackRequest extends FormRequest
 {
@@ -15,7 +16,7 @@ class TrackRequest extends FormRequest
      */
     public function authorize(): bool
     {
-        return false;
+        return Auth::hasUser();
     }
 
     /**
@@ -26,7 +27,14 @@ class TrackRequest extends FormRequest
     public function rules(): array
     {
         return [
-            //
+            'title' => 'required|string',
+            'owner' => 'required|uuid',
+            'cover' => 'required|mimes:jpg,png',
+            'track' => 'required|mimes:mp3,wav',
+            'genre' => 'required|uuid',
+            'album' => 'nullable|exists:albums,id',
+            'explicit' => 'nullable',
+            'features' => ['nullable', 'array' => 'exists:artists,id']
         ];
     }
 

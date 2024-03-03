@@ -16,7 +16,7 @@ class ArtistRepository implements ArtistInterface
     use ResponseAPI;
     function fetchAll(): JsonResponse
     {
-        $artists = Artist::query()->paginate(10);
+        $artists = Artist::query()->with('albums')->get();
 
         return $this->success("All artists", $artists);
     }

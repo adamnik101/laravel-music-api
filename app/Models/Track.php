@@ -17,6 +17,7 @@ class Track extends Model
     protected $casts = [
         'explicit' => 'boolean'
     ];
+    protected $fillable = ['title', 'cover', 'path', 'duration', 'explicit', 'owner_id', 'album_id', 'genre_id'];
     protected $withCount = ['trackPlays'];
 
     protected $with = ['owner', 'features', 'album'];
