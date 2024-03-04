@@ -6,6 +6,7 @@ use App\Models\Album;
 use App\Models\Artist;
 use App\Models\Genre;
 use App\Models\Track;
+use App\Models\User;
 use App\Repositories\Interfaces\SearchInterface;
 use App\Traits\ResponseAPI;
 use Carbon\Carbon;
@@ -188,5 +189,23 @@ class SearchRepository implements SearchInterface
         $result = $albums->paginate(10);
 
         return $this->success('Search albums with pagination', $result);
+    }
+
+    function searchUsers(array $query): JsonResponse
+    {
+        $users = User::query();
+
+        if (isset($query['username'])) {
+            $username = $query['username'];
+            $users->where('username', 'like', '%'.$username.'%');
+        }
+        if (isset($query['email'])) {
+            $email = $query['email'];
+            $users->where('email', 'like', '%'.$email.'%');
+        }
+        $this->searchTimestamps($users, $query);
+
+        $result = $users->paginate(10);
+        return $this->success('Search users with pagination', $result);
     }
 }

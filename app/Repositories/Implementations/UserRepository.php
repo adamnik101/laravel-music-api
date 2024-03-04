@@ -24,9 +24,9 @@ class UserRepository implements UserInterface
     function fetchAll(): JsonResponse
     {
         try {
-            $users = User::all();
+            $users = User::paginate(10);
 
-            return $this->success("All users", $users);
+            return $this->success("All users with pagination", $users);
         }
         catch (\Exception $exception) {
             return $this->error($exception->getMessage(), $exception->getCode());

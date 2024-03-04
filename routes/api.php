@@ -57,7 +57,7 @@ Route::whereUuid('id')->group(function () {
         Route::post('/cover', [UserController::class, 'updateCover']);
     });
 
-    Route::prefix('/users')->middleware(['auth:sanctum', 'ability:admin'])->group(function () {
+    Route::prefix('/users')->middleware(['auth:sanctum'])->group(function () {
         Route::get('/', [UserController::class, 'fetchAll']);
         Route::get('/{id}', [UserController::class, 'fetchOne']);
         Route::post('/{id}/update', [UserController::class, 'update']);

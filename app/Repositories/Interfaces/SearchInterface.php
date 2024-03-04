@@ -12,4 +12,5 @@ interface SearchInterface
     function searchGenres(array $query) : JsonResponse;
     function searchArtists(array $query) : JsonResponse;
     function searchAlbums(array $query) : JsonResponse;
+    function searchUsers(array $query) : JsonResponse;
 }
