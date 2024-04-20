@@ -88,7 +88,7 @@ Route::whereUuid('id')->group(function () {
         Route::get('/', [ArtistController::class, 'fetchAll']);
         Route::get('/{id}', [ArtistController::class, 'fetchOne']);
         Route::get('/trending', [ArtistController::class, 'trending']);
-        Route::middleware(['auth:sanctum', 'ability:admin'])->group(function () {
+        Route::middleware(['auth:sanctum'])->group(function () {
             Route::get('/search', [SearchController::class, 'searchArtists']);
 
             Route::post('/', [ArtistController::class, 'insert']);
