@@ -8,6 +8,7 @@ use App\Repositories\Implementations\ArtistRepository;
 use App\Repositories\Implementations\AuthRepository;
 use App\Repositories\Implementations\GenreRepository;
 use App\Repositories\Implementations\PlaylistRepository;
+use App\Repositories\Implementations\RoleRepository;
 use App\Repositories\Implementations\SearchRepository;
 use App\Repositories\Implementations\TrackRepository;
 use App\Repositories\Implementations\UserRepository;
@@ -17,6 +18,7 @@ use App\Repositories\Interfaces\ArtistInterface;
 use App\Repositories\Interfaces\AuthInterface;
 use App\Repositories\Interfaces\GenreInterface;
 use App\Repositories\Interfaces\PlaylistInterface;
+use App\Repositories\Interfaces\RoleInterface;
 use App\Repositories\Interfaces\SearchInterface;
 use App\Repositories\Interfaces\TrackInterface;
 use App\Repositories\Interfaces\UserInterface;
@@ -38,6 +40,7 @@ class RepositoryServiceProvider extends ServiceProvider
         $this->app->bind(AuthInterface::class, AuthRepository::class);
         $this->app->bind(SearchInterface::class, SearchRepository::class);
         $this->app->bind(AdminInterface::class, AdminRepository::class);
+        $this->app->bind(RoleInterface::class, RoleRepository::class);
     }
 
     /**

@@ -15,7 +15,7 @@ class GenreRequest extends FormRequest
      */
     public function authorize(): bool
     {
-        return false;
+        return true;
     }
 
     /**
@@ -26,7 +26,7 @@ class GenreRequest extends FormRequest
     public function rules(): array
     {
         return [
-            //
+            'name' => 'string|required|min:3|max:50'
         ];
     }
     protected function failedValidation(Validator $validator)

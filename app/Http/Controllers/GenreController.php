@@ -17,7 +17,7 @@ class GenreController extends BaseController
 
     public function insert(GenreRequest $request)
     {
-        return $this->repository->insert($request->validated());
+        return $this->repository->insert(array($request->validated()));
     }
     public function update(GenreRequest $request, string $id): JsonResponse
     {

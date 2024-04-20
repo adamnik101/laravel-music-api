@@ -6,6 +6,7 @@ use App\Http\Controllers\ArtistController;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\GenreController;
 use App\Http\Controllers\PlaylistController;
+use App\Http\Controllers\RoleController;
 use App\Http\Controllers\SearchController;
 use App\Http\Controllers\TrackController;
 use \App\Http\Controllers\UserController;
@@ -62,6 +63,11 @@ Route::whereUuid('id')->group(function () {
         Route::get('/{id}', [UserController::class, 'fetchOne']);
         Route::post('/{id}/update', [UserController::class, 'update']);
         Route::post('/{id}/delete', [UserController::class, 'delete']);
+
+        Route::get('/search', [SearchController::class, 'searchUsers']);
+    });
+    Route::prefix('/roles')->middleware(['auth:sanctum'])->group(function () {
+       Route::get('/', [RoleController::class, 'fetchAll']);
     });
 
     Route::prefix('/albums')->group(function () {
@@ -108,10 +114,13 @@ Route::whereUuid('id')->group(function () {
     Route::prefix('/genres')->group(function () {
         Route::get('/', [GenreController::class, 'fetchAll']);
         Route::get('/{id}', [GenreController::class, 'fetchOne']);
-        Route::middleware(['auth:sanctum', 'ability:admin'])->group(function () {
+        Route::middleware(['auth:sanctum'])->group(function () {
             Route::post('/{id}/update', [GenreController::class, 'update']);
-            Route::post('/{id}/delete', [GenreController::class, 'delete']);
+            Route::delete('/{id}', [GenreController::class, 'delete']);
+            Route::post('/', [GenreController::class, 'insert']);
+
         });
+        Route::get('/search', [SearchController::class, 'searchGenres']);
     });
 
     Route::prefix('/playlists')->group(function () {

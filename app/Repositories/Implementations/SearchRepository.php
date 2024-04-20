@@ -12,6 +12,7 @@ use App\Traits\ResponseAPI;
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Http\JsonResponse;
+use Illuminate\Support\Facades\Auth;
 
 class SearchRepository implements SearchInterface
 {
@@ -123,7 +124,18 @@ class SearchRepository implements SearchInterface
 
     function searchGenres(array $query): JsonResponse
     {
-        // TODO: Implement searchGenres() method.
+        $genres = Genre::query();
+
+        if (isset($query['name'])) {
+            $name = $query['name'];
+            $genres->where('name', 'like', "%".$name."%");
+        }
+
+        $this->searchTimestamps($genres, $query);
+
+        $result  = $genres->paginate(10);
+
+        return $this->success('Genres with pagination', $result);
     }
 
     function searchArtists(array $query): JsonResponse
@@ -193,7 +205,7 @@ class SearchRepository implements SearchInterface
 
     function searchUsers(array $query): JsonResponse
     {
-        $users = User::query();
+        $users = User::query()->whereNot('id', '=', Auth::user()->getAuthIdentifier())->with('role');
 
         if (isset($query['username'])) {
             $username = $query['username'];
@@ -202,6 +214,14 @@ class SearchRepository implements SearchInterface
         if (isset($query['email'])) {
             $email = $query['email'];
             $users->where('email', 'like', '%'.$email.'%');
+        }
+        if (isset($query['active'])) {
+            $active = $query['active'];
+            $users->where('active', '=', $active);
+        }
+        if (isset($query['role'])) {
+            $role = $query['role'];
+            $users->where('role_id', '=', $role);
         }
         $this->searchTimestamps($users, $query);
 

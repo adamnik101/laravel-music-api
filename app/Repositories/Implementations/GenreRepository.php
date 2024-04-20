@@ -4,10 +4,12 @@ namespace App\Repositories\Implementations;
 
 use App\Http\Requests\GenreRequest;
 use App\Models\Genre;
+use App\Models\Playlist;
 use App\Repositories\Interfaces\GenreInterface;
 use App\Traits\ResponseAPI;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Http\JsonResponse;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 
 class GenreRepository implements GenreInterface
@@ -16,7 +18,7 @@ class GenreRepository implements GenreInterface
 
     function fetchAll(): JsonResponse
     {
-        $genres = Genre::all();
+        $genres = Genre::query()->whereHas('playlists')->get();
 
         return $this->success('All genres', $genres);
     }
@@ -33,7 +35,9 @@ class GenreRepository implements GenreInterface
     {
         try {
             $genre = new Genre();
-            $genre->name = $data['name'];
+            $genre->name = $data[0]['name'];
+            $genre->cover = 'cover';
+            $genre->hex_color = '#fff';
 
             $genre->save();
 
@@ -41,13 +45,29 @@ class GenreRepository implements GenreInterface
         }
         catch (\Exception $exception) {
             Log::error($exception->getMessage());
-            return $this->error('Server error', 500);
+            return $this->error($exception->getMessage(), 500);
         }
     }
 
     function delete(string $id): JsonResponse
     {
-        // TODO: Implement delete() method.
+        try {
+            DB::beginTransaction();
+            $genre = Genre::query()->find($id);
+
+            if (!$genre) return $this->error('Genre not found', 400);
+
+            $playlistsWithGenreToDelete = Playlist::query()->where('genre_id', '=', $genre->id)->update([
+                'genre_id' => null
+            ]);
+            $genre->delete();
+            DB::commit();
+            return $this->success('Genre has been deleted', null, 204);
+        }
+        catch (\Exception $exception) {
+            DB::rollBack();
+            return $this->error($exception->getMessage(), 500);
+        }
     }
 
     public function update(array $data, string $id): JsonResponse

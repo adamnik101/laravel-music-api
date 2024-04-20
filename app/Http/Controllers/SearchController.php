@@ -30,4 +30,12 @@ class SearchController extends Controller
     {
         return $this->repository->searchArtists($request->all());
     }
+    public function searchUsers(Request $request) : JsonResponse
+    {
+        return $this->repository->searchUsers($request->all());
+    }
+    public function searchGenres(Request $request) : JsonResponse
+    {
+        return  $this->repository->searchGenres($request->all());
+    }
 }
