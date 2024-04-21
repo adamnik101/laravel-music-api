@@ -4,6 +4,7 @@ namespace App\Repositories\Implementations;
 
 use App\Helpers\ArtistHelper;
 use App\Http\Requests\ArtistRequest;
+use App\Http\Requests\ManyUuidsRequest;
 use App\Models\Artist;
 use App\Repositories\Interfaces\ArtistInterface;
 use App\Traits\ResponseAPI;
@@ -53,9 +54,17 @@ class ArtistRepository implements ArtistInterface
 
     function delete(string $id): JsonResponse
     {
-        // TODO: Implement delete() method.
+        $artist = Artist::query()->find($id);
+
+
+        return $this->success('Deleted an artist', $artist);
     }
 
+    function deleteMany(ManyUuidsRequest $request): JsonResponse
+    {
+
+        return $this->success('response', $request);
+    }
     public function update(array $data, string $id): JsonResponse
     {
         // TODO: Implement update() method.

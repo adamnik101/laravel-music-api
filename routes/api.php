@@ -62,7 +62,7 @@ Route::whereUuid('id')->group(function () {
         Route::get('/', [UserController::class, 'fetchAll']);
         Route::get('/{id}', [UserController::class, 'fetchOne']);
         Route::post('/{id}/update', [UserController::class, 'update']);
-        Route::post('/{id}/delete', [UserController::class, 'delete']);
+        Route::post('/delete', [UserController::class, 'delete']);
 
         Route::get('/search', [SearchController::class, 'searchUsers']);
     });
@@ -80,7 +80,7 @@ Route::whereUuid('id')->group(function () {
 
             Route::post('', [AlbumController::class, 'insert']);
             Route::post('/{id}/update', [AlbumController::class, 'update']);
-            Route::post('/{id}/delete', [AlbumController::class, 'delete']);
+            Route::post('/delete', [AlbumController::class, 'delete']);
         });
     });
 
@@ -93,7 +93,8 @@ Route::whereUuid('id')->group(function () {
 
             Route::post('/', [ArtistController::class, 'insert']);
             Route::post('/{id}/update', [ArtistController::class, 'update']);
-            Route::post('/{id}/delete', [ArtistController::class, 'delete']);
+            Route::delete('/{id}', [ArtistController::class, 'delete']);
+            Route::post('/delete-many', [ArtistController::class, 'deleteMany']);
         });
     });
 
@@ -107,7 +108,7 @@ Route::whereUuid('id')->group(function () {
             Route::post('/', [TrackController::class, 'insert']);
             Route::get('/search', [SearchController::class, 'searchTracks']);
             Route::post('/{id}/update', [TrackController::class, 'update']);
-            Route::delete('/{id}', [TrackController::class, 'delete']);
+            Route::delete('/delete', [TrackController::class, 'delete']);
         });
     });
 

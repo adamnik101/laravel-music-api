@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Http\Requests\ArtistRequest;
+use App\Http\Requests\ManyUuidsRequest;
 use App\Repositories\Interfaces\ArtistInterface;
 use App\Repositories\Interfaces\BaseInterface;
 use Illuminate\Http\JsonResponse;
@@ -26,5 +27,9 @@ class ArtistController extends BaseController
     public function trending() : JsonResponse
     {
         return $this->repository->trending();
+    }
+    public function deleteMany(ManyUuidsRequest $request): JsonResponse
+    {
+        return $this->repository->deleteMany($request);
     }
 }
