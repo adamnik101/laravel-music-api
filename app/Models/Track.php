@@ -20,7 +20,7 @@ class Track extends Model
     protected $fillable = ['title', 'cover', 'path', 'duration', 'explicit', 'owner_id', 'album_id', 'genre_id'];
     protected $withCount = ['trackPlays'];
 
-    protected $with = ['owner', 'features', 'album'];
+    protected $with = ['owner.albums', 'features', 'album'];
     public function owner() : BelongsTo
     {
         return $this->belongsTo(Artist::class);

@@ -26,7 +26,10 @@ class AuthRepository implements AuthInterface
 
         if(!$loggedIn) return $this->error("Invalid credentials.", 401);
 
-        $user = Auth::user();
+        $userId = Auth::user()->getAuthIdentifier();
+        $user = User::query()->withCount(['playlists', 'followings'])
+            ->with(['playlists', 'followings', 'likedTracks', 'likedAlbums', 'settings', 'role']) // ne ucitavaj sve odmah, inicijalno ne trebaju odmah svi podaci
+            ->find(Auth::user()->getAuthIdentifier());
 
         $abilities = ['end-user'];
         if($user->role->name == 'admin') {
@@ -81,11 +84,10 @@ class AuthRepository implements AuthInterface
     {
         $user = User::query()
             ->withCount(['playlists', 'followings'])
-            ->with(['playlists', 'followings', 'likedTracks', 'likedAlbums', 'settings']) // ne ucitavaj sve odmah, inicijalno ne trebaju odmah svi podaci
+            ->with(['playlists', 'followings', 'likedTracks', 'likedAlbums', 'settings', 'role']) // ne ucitavaj sve odmah, inicijalno ne trebaju odmah svi podaci
             ->find(Auth::user()->getAuthIdentifier());
 
         if(!$user) return $this->error('Not authorized', 401);
-
 
         return $this->success("User data", $user);
     }

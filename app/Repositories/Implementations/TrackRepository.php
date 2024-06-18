@@ -25,7 +25,7 @@ class TrackRepository implements TrackInterface
 
     function fetchAll(): JsonResponse
     {
-        $tracks = Track::paginate(10);
+        $tracks = Track::query()->paginate(10);
 
         return $this->success("All tracks with pagination", $tracks);
     }
