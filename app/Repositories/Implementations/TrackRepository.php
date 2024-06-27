@@ -12,6 +12,7 @@ use App\Repositories\Interfaces\TrackInterface;
 use App\Serializers\TrackSerializer;
 use App\Traits\ResponseAPI;
 use Carbon\Carbon;
+use http\Client\Request;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Support\Facades\Auth;
@@ -49,7 +50,7 @@ class TrackRepository implements TrackInterface
     {
         try {
             DB::beginTransaction();
-            $imagePath = ImageHelper::uploadImage($data['cover']);
+            $imagePath = ImageHelper::uploadImage($data['cover'], 'tracks');
             $trackPath = TrackHelper::saveTrackFile($data['track']);
             $duration = TrackHelper::getTrackDurationInSeconds($trackPath);
 
@@ -97,7 +98,66 @@ class TrackRepository implements TrackInterface
 
     public function update(array $data, string $id): JsonResponse
     {
-        // TODO: Implement update() method.
+        try {
+            DB::beginTransaction();
+
+            $track = Track::query()->findOrFail($id);
+
+            if(isset($data['title'])) {
+                $track->title = $data['title'];
+            }
+
+            if(isset($data['genre'])) {
+                $track->genre_id = $data['genre'];
+            }
+
+            if(isset($data['explicit'])) {
+                $track->explicit = (bool) $data['explicit'];
+            }
+
+            if(isset($data['album'])) {
+                $track->album_id = $data['album'];
+            }
+
+            if(isset($data['owner'])) {
+                $track->owner_id = $data['owner'];
+            }
+
+            if(isset($data['cover'])) {
+                $imagePath = ImageHelper::uploadImage($data['cover'], 'tracks');
+                $track->cover = $imagePath;
+            }
+
+            if(isset($data['track'])) {
+                $trackPath = TrackHelper::saveTrackFile($data['track']);
+                $duration = TrackHelper::getTrackDurationInSeconds($trackPath);
+
+                $track->path = $trackPath;
+                $track->duration = $duration;
+            }
+
+
+            $track->save();
+
+            if (isset($data['features'])) {
+                $track->features()->detach();
+
+                foreach ($data['features'] as $feature) {
+                    $track->features()->attach([
+                        'artist_id' =>$feature
+                    ]);
+                }
+            }
+            DB::commit();
+
+            return $this->success('Updated track', $track, 201);
+
+        }
+        catch (\Exception $exception) {
+            DB::rollBack();
+            Log::error($exception);
+            return $this->error($exception->getMessage(), 500);
+        }
     }
 
 
@@ -123,5 +183,18 @@ class TrackRepository implements TrackInterface
         $tracks = Track::query()->whereIn('id', $trending)->get();
 
         return $this->success('Trending tracks', $tracks);
+    }
+
+    public function deleteMany(\Illuminate\Http\Request $request): JsonResponse
+    {
+        $ids = $request->get('data');
+
+        try{
+            Track::destroy($ids);
+        }
+        catch (\Exception $exception) {
+            return $this->error('Error on deleting', 422);
+        }
+        return $this->success('Delete Many', []);
     }
 }

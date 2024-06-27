@@ -5,6 +5,7 @@ namespace App\Repositories\Implementations;
 use App\Http\Requests\GenreRequest;
 use App\Models\Genre;
 use App\Models\Playlist;
+use App\Models\Track;
 use App\Repositories\Interfaces\GenreInterface;
 use App\Traits\ResponseAPI;
 use Illuminate\Foundation\Http\FormRequest;
@@ -57,21 +58,41 @@ class GenreRepository implements GenreInterface
 
             if (!$genre) return $this->error('Genre not found', 400);
 
-            $playlistsWithGenreToDelete = Playlist::query()->where('genre_id', '=', $genre->id)->update([
+            Playlist::query()->where('genre_id', '=', $genre->id)->update([
                 'genre_id' => null
             ]);
+
+            Track::query()->where('genre_id', '=', $genre->id)->update([
+                'genre_id' => null
+            ]);
+
             $genre->delete();
             DB::commit();
             return $this->success('Genre has been deleted', null, 204);
         }
         catch (\Exception $exception) {
             DB::rollBack();
+            Log::error($exception->getMessage());
             return $this->error($exception->getMessage(), 500);
         }
     }
 
     public function update(array $data, string $id): JsonResponse
     {
-        // TODO: Implement update() method.
+        try {
+            $genre = Genre::query()->findOrFail($id);
+
+            if(isset($data['name'])) {
+                $genre->name = $data['name'];
+            }
+
+            $genre->save();
+
+            return $this->success("Updated genre", 201);
+        }
+        catch (\Exception $exception) {
+            Log::error($exception->getMessage());
+            return $this->error($exception->getMessage(), 500);
+        }
     }
 }
