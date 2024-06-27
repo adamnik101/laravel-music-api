@@ -221,7 +221,7 @@ class UserRepository implements UserInterface
 
         if (!$user) return $this->error('Not authorized', 401);
 
-        $path = ImageHelper::uploadImage($file);
+        $path = ImageHelper::uploadImage($file, 'profile');
         $user->cover = $path;
 
         $user->save();

@@ -59,7 +59,7 @@ class PlaylistRepository implements PlaylistInterface
             $playlist->title = $title;
             $playlist->user_id = Auth::user()->getAuthIdentifier();
             if ($image) {
-                $playlist->image_url = ImageHelper::uploadImage($image);
+                $playlist->image_url = ImageHelper::uploadImage($image, 'playlists');
             }
             if($description) $playlist->description = $description;
 
@@ -102,7 +102,7 @@ class PlaylistRepository implements PlaylistInterface
 
         if ($hasImage) {
             $image = $data['image'];
-            $image_url = ImageHelper::uploadImage($image);
+            $image_url = ImageHelper::uploadImage($image, 'playlists');
             $playlist->image_url = $image_url;
         }
         else if (isset($data['remove_image'])){

@@ -3,6 +3,7 @@
 namespace App\Repositories\Implementations;
 
 use App\Helpers\ArtistHelper;
+use App\Helpers\ImageHelper;
 use App\Http\Requests\ArtistRequest;
 use App\Http\Requests\ManyUuidsRequest;
 use App\Models\Artist;
@@ -41,8 +42,7 @@ class ArtistRepository implements ArtistInterface
             $cover = $data['cover'];
             $artist = new Artist();
             $artist->name = $name;
-            $artist->cover = $cover;
-
+            $artist->cover = ImageHelper::uploadImage($cover, 'artists');
             $artist->save();
 
             return $this->success("Added artist", $name, 201);
@@ -67,7 +67,19 @@ class ArtistRepository implements ArtistInterface
     }
     public function update(array $data, string $id): JsonResponse
     {
-        // TODO: Implement update() method.
+        $artist = Artist::query()->findOrFail($id);
+        try {
+            $name = $data['name'];
+            $cover = $data['cover'];
+            $artist->name = $name;
+            $artist->cover = ImageHelper::uploadImage($cover, 'artists');
+            $artist->save();
+
+            return $this->success("Updated artist", $name, 201);
+        }
+        catch (\Exception $exception) {
+            return $this->error( $exception->getMessage(), 500);
+        }
     }
     public function trending() : JsonResponse
     {

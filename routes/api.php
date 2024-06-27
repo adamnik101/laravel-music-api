@@ -109,6 +109,7 @@ Route::whereUuid('id')->group(function () {
             Route::get('/search', [SearchController::class, 'searchTracks']);
             Route::post('/{id}/update', [TrackController::class, 'update']);
             Route::delete('/delete', [TrackController::class, 'delete']);
+            Route::post('/delete-many', [TrackController::class, 'deleteMany']);
         });
     });
 
