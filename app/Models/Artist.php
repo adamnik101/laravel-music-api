@@ -12,6 +12,9 @@ class Artist extends Model
 {
     use HasFactory, HasUuids;
 
+    protected $casts = [
+      'verified' => 'boolean'
+    ];
     public function features () : BelongsToMany {
         return $this->belongsToMany(Track::class, 'features');
     }
@@ -26,5 +29,9 @@ class Artist extends Model
     public function albums() : HasMany
     {
         return $this->hasMany(Album::class);
+    }
+
+    public function totalLikes () {
+        return $this->hasManyThrough(Track::class, 'track_user_likes');
     }
 }
