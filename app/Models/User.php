@@ -60,7 +60,7 @@ class User extends Authenticatable
         return $this->belongsToMany(Track::class, 'track_user_likes')->withPivot('created_at')->orderByPivot('created_at', 'desc');
     }
     public function likedAlbums() : BelongsToMany {
-        return $this->belongsToMany(Album::class, 'album_user_likes');
+        return $this->belongsToMany(Album::class, 'album_user_likes')->withCount('tracks');
     }
     public function followings() : BelongsToMany {
         return $this->belongsToMany(Artist::class, 'artist_user_followings');

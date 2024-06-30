@@ -26,9 +26,10 @@ class ArtistRepository implements ArtistInterface
     function fetchOne(string $id): JsonResponse
     {
         $artist = Artist::query()
-            ->with(['tracks', 'features', 'albums'])
+            ->with(['tracks' => function ($query) {
+                $query->withCount('likedBy');
+            }, 'features', 'albums'])
             ->withCount(['albums','tracks', 'features', 'followedBy'])->find($id);
-
         if (!$artist) return $this->error("No artist found", 404);
         $artist->monthly_listeners = ArtistHelper::getMonthlyListeners($artist);
         $artist->featured_albums = $artist->features->pluck('album')->filter()->unique()->values()->toArray();

@@ -19,7 +19,8 @@ class ArtistFactory extends Factory
         $name = fake()->firstName();
         return [
             "name" => $name,
-            "cover" => fake()->imageUrl(500, 500, null, false, $name)
+            "cover" => fake()->imageUrl(500, 500, null, false, $name),
+            "verified" => fake()->boolean()
         ];
     }
 }

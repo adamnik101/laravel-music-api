@@ -18,20 +18,20 @@ class UserSeeder extends Seeder
      */
     public function run(): void
     {
-        $numberOfUsers = 20;
+        $numberOfUsers = 150;
         for ($i = 0; $i < $numberOfUsers; $i++) {
             $user = User::factory()->create();
 
             $user->settings()->save(Setting::factory()->makeOne());
 
-            $numberOfLikes = rand(0,500);
+            $numberOfLikes = rand(0,1000);
             $tracks = null;
             if($numberOfLikes > 0) {
                 $tracks = Track::query()->inRandomOrder()->take($numberOfLikes)->get();
                 $user->likedTracks()->saveMany($tracks);
             }
 
-            $numberOfAlbums = rand(0,20);
+            $numberOfAlbums = rand(0,100);
             $albums = null;
             if($numberOfAlbums > 0) {
                 $albums = Album::query()->inRandomOrder()->take($numberOfAlbums)->get();
