@@ -40,7 +40,7 @@ class PlaylistRequest extends FormRequest
           'title.string' => 'Title must be a string.',
             'description.string' => 'Description must be a string.',
             'image.image' => 'Image is invalid.',
-            'image.dimensions' => 'Image dimensions are out of range.',
+            'image.dimensions' => 'Image dimensions: 100x100 to 1000x1000',
         ];
     }
     protected function failedValidation(Validator $validator)
