@@ -195,6 +195,7 @@ class UserRepository implements UserInterface
     }
     public function updateSettings(array $data) : JsonResponse
     {
+
         $user = User::query()->with('settings')->find(Auth::user()->getAuthIdentifier());
         if (!$user) return $this->error('Not authorized', 401);
 
