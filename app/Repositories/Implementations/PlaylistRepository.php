@@ -34,7 +34,7 @@ class PlaylistRepository implements PlaylistInterface
             ->orderByDesc('created_at');
         }])->playlists;
 
-        return $this->success("All playlists with pagination", $playlists);
+        return $this->success("All playlists", $playlists);
     }
 
     function fetchOne(string $id): JsonResponse
@@ -94,7 +94,9 @@ class PlaylistRepository implements PlaylistInterface
 
     public function update(array $data, string $id): JsonResponse
     {
-        $playlist = Playlist::query()->where('user_id', '=', Auth::user()->getAuthIdentifier())->find($id);
+        $playlist = Playlist::query()
+            ->with('tracks')->withCount('tracks')
+            ->where('user_id', '=', Auth::user()->getAuthIdentifier())->find($id);
 
         if (!$playlist) return $this->error('Not authorized', 401);
 
@@ -114,6 +116,8 @@ class PlaylistRepository implements PlaylistInterface
         $playlist->updated_at = now();
 
         $playlist->save();
+
+        $playlist->latest_added = $playlist->tracks->last() ? $playlist->tracks->last()->pivot->created_at : $playlist->updated_at;
 
         return $this->success('Updated playlist', $playlist, 201);
     }

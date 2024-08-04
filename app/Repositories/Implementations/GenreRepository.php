@@ -19,14 +19,14 @@ class GenreRepository implements GenreInterface
 
     function fetchAll(): JsonResponse
     {
-        $genres = Genre::query()->whereHas('playlists')->get();
+        $genres = Genre::query()->whereHas('playlists')->withCount('playlists')->get();
 
         return $this->success('All genres', $genres);
     }
 
     function fetchOne(string $id): JsonResponse
     {
-        $genre = Genre::query()->with('playlists')->find($id);
+        $genre = Genre::query()->with('playlists')->withCount('playlists')->find($id);
 
         if(!$genre) return $this->error("No genre found.", 404);
 

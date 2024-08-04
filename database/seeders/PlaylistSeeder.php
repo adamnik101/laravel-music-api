@@ -15,9 +15,9 @@ class PlaylistSeeder extends Seeder
      */
     public function run(): void
     {
-        Playlist::factory()->count(10000)->create()
+        Playlist::factory()->count(5000)->create()
             ->each(function (Playlist $playlist) {
-                $numberOfTracks = rand(0,500);
+                $numberOfTracks = rand(0,30);
                 if($numberOfTracks > 0) {
                     $tracks = Track::query()->inRandomOrder()->take($numberOfTracks)->get();
 

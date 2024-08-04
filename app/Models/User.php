@@ -54,7 +54,7 @@ class User extends Authenticatable
         return $this->hasOne(Setting::class)->withCasts(['explicit' => 'bool']);
     }
     public function playlists() : HasMany {
-        return $this->hasMany(Playlist::class);
+        return $this->hasMany(Playlist::class)->withCount('tracks');
     }
     public function likedTracks() : BelongsToMany {
         return $this->belongsToMany(Track::class, 'track_user_likes')->withPivot('created_at')->orderByPivot('created_at', 'desc');

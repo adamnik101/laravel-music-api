@@ -133,7 +133,7 @@ Route::whereUuid('id')->group(function () {
             Route::patch('/{id}', [PlaylistController::class, 'update']);
             Route::delete('/{id}', [PlaylistController::class, 'delete']);
 
-            Route::post('/{id}/tracks', [PlaylistController::class, 'insertTracks']);
+            Route::post('/tracks/{id}', [PlaylistController::class, 'insertTracks']);
             Route::delete('/{id}/tracks/{track}', [PlaylistController::class, 'removeTrack'])->where('track', '[0-9]*');
         });
     });

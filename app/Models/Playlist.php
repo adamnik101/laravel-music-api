@@ -14,6 +14,10 @@ class Playlist extends Model
 
     protected $fillable = ['title', 'description', 'updated_at'];
 
+    protected $casts = [
+      'tracks_count' => 'int'
+    ];
+
     public function tracks() : BelongsToMany {
         return $this->belongsToMany(Track::class, 'playlist_track')->withPivot(['id','created_at'])->orderByPivot('created_at');
     }

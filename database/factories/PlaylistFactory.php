@@ -24,7 +24,7 @@ class PlaylistFactory extends Factory
         return [
             "title" => $title,
             "description" => fake()->text(),
-            "image_url" => fake()->imageUrl(500, 500, null, false, $title),
+            "image_url" => $this->faker->imageUrl(500, 500, null, true),
             "user_id" => $user->id,
             "genre_id" => $genre->id
         ];

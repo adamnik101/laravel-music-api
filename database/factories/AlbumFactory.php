@@ -17,11 +17,11 @@ class AlbumFactory extends Factory
      */
     public function definition(): array
     {
-        $name = fake()->unique()->word();
+        $name = fake()->word();
         return [
             "name" => $name,
             "release_year" => fake()->year(),
-            "cover" => fake()->imageUrl(500, 500, null, false, $name),
+            "cover" => $this->faker->imageUrl(500, 500, null, true),
             "artist_id" => Artist::inRandomOrder()->first()->id
         ];
     }

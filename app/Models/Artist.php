@@ -13,7 +13,14 @@ class Artist extends Model
     use HasFactory, HasUuids;
 
     protected $casts = [
-      'verified' => 'boolean'
+        'verified' => 'boolean',
+        'tracks_count' => 'int',
+        'albums_count' => 'int'
+    ];
+
+    protected $withCount = [
+        'tracks',
+        'followedBy'
     ];
     public function features () : BelongsToMany {
         return $this->belongsToMany(Track::class, 'features');
