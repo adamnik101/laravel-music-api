@@ -13,6 +13,13 @@ class Album extends Model
 {
     use HasFactory, HasUuids;
 
+    protected $withCount = [
+        'tracks'
+    ];
+
+    protected $casts = [
+        'tracks_count' => 'int'
+    ];
     public function artist() : BelongsTo
     {
         return $this->belongsTo(Artist::class);

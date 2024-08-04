@@ -13,6 +13,7 @@ class Genre extends Model
 
     public function playlists() : HasMany
     {
-        return $this->hasMany(Playlist::class);
+        return $this->hasMany(Playlist::class)
+            ->withCount('tracks');
     }
 }

@@ -28,7 +28,11 @@ class AuthRepository implements AuthInterface
 
         $userId = Auth::user()->getAuthIdentifier();
         $user = User::query()->withCount(['playlists', 'followings'])
-            ->with(['playlists', 'followings', 'likedTracks', 'likedAlbums', 'settings', 'role']) // ne ucitavaj sve odmah, inicijalno ne trebaju odmah svi podaci
+            ->with(['playlists' => function ($query) {
+
+                $query->withCount('tracks')
+                ->orderByDesc('created_at');
+            }, 'followings', 'likedTracks', 'likedAlbums', 'settings', 'role']) // ne ucitavaj sve odmah, inicijalno ne trebaju odmah svi podaci
             ->find(Auth::user()->getAuthIdentifier());
 
         $abilities = ['end-user'];
@@ -84,7 +88,10 @@ class AuthRepository implements AuthInterface
     {
         $user = User::query()
             ->withCount(['playlists', 'followings'])
-            ->with(['playlists', 'followings', 'likedTracks', 'likedAlbums', 'settings', 'role']) // ne ucitavaj sve odmah, inicijalno ne trebaju odmah svi podaci
+            ->with(['playlists' => function ($query) {
+                $query->withCount('tracks')
+                    ->orderByDesc('created_at');
+            }, 'followings', 'likedTracks', 'likedAlbums', 'settings', 'role']) // ne ucitavaj sve odmah, inicijalno ne trebaju odmah svi podaci
             ->find(Auth::user()->getAuthIdentifier());
 
         if(!$user) return $this->error('Not authorized', 401);

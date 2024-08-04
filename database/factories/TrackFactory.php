@@ -30,7 +30,7 @@ class TrackFactory extends Factory
             "owner_id" => $owner->id,
             "album_id" => $album?->id,
             "genre_id" => $genre->id,
-            "cover" => fake()->imageUrl(500, 500, null, false, $title),
+            "cover" => $this->faker->imageUrl(500, 500, null, true),
             "duration" => fake()->numberBetween(45, 360),
             "created_at" => fake()->dateTimeBetween('-1 years')
         ];

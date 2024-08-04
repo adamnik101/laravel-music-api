@@ -133,7 +133,7 @@ class UserRepository implements UserInterface
             "created_at" => now(),
             "updated_at" => now()
         ]]);
-        return $this->success("Added to Liked", $track);
+        return $this->success("Added to Liked", $user->likedTracks()->find($track));
     }
 
     function saveAlbum(string $album): JsonResponse
@@ -203,6 +203,7 @@ class UserRepository implements UserInterface
             'explicit' => $data['value']
         ]);
 
+        $user->save();
         return $this->success('Updated settings', ['id' => $user->settings->id, 'explicit' => $data['value']]);
     }
 

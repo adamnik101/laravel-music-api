@@ -15,7 +15,7 @@ class TrackSeeder extends Seeder
      */
     public function run(): void
     {
-        $numberOfTracks = 10000;
+        $numberOfTracks = 1000;
 
         for ($i = 0; $i < $numberOfTracks; $i++) {
             $track = Track::factory()->create();

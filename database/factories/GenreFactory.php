@@ -18,7 +18,7 @@ class GenreFactory extends Factory
     {
         return [
             "name" => ucfirst(fake()->word()),
-            "cover" => fake()->imageUrl(500, 500, null, false),
+            "cover" => $this->faker->imageUrl(500, 500, null, true),
             "hex_color" => fake()->hexColor()
         ];
     }
