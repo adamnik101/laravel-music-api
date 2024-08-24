@@ -22,7 +22,7 @@ class AlbumRepository implements AlbumInterface
     function fetchAll(): JsonResponse
     {
         try {
-            $albums = Album::query()->with('artist')->withCount('tracks')->paginate();
+            $albums = Album::query()->with('artist')->withCount('tracks')->paginate(10);
 
             return $this->success("All albums with pagination", $albums);
         }

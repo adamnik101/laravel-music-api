@@ -65,4 +65,15 @@ class AdminRepository implements AdminInterface
 
         return $this->success('Admin dashboard', $responseData);
     }
+
+    public function artists(): JsonResponse
+    {
+        return $this->success('All Artists', Artist::query()->get());
+    }
+
+    public function albums(): JsonResponse
+    {
+        return $this->success('All Albums', Album::query()->get());
+
+    }
 }

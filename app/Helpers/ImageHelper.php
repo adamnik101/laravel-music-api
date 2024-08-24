@@ -12,7 +12,7 @@ class ImageHelper
         $extension = $file->getClientOriginalExtension();
         $imageName = time(). '.' . $extension;
         $user = \auth()->user()->getAuthIdentifier();
-        $file->move("F:\WebStorm Projects\zavrsniAng\src\assets\images\users\\$user\\$directory", $imageName);
-        return 'assets/images/users/'.auth()->user()->getAuthIdentifier().'/'.$directory.'/'.$imageName;
+        $file->move("F:\\new ng\\ng-zavrsni\public\images\users\\".$user."\\$directory", $imageName);
+        return '/images/users/'.auth()->user()->getAuthIdentifier().'/'.$directory.'/'.$imageName;
     }
 }
