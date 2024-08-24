@@ -18,4 +18,12 @@ class AdminController extends Controller
     {
         return $this->admin->dashboard();
     }
+    public function artists(): JsonResponse
+    {
+        return $this->admin->artists();
+    }
+    public function albums(): JsonResponse
+    {
+        return $this->admin->albums();
+    }
 }

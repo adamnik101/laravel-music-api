@@ -139,7 +139,10 @@ Route::whereUuid('id')->group(function () {
     });
 
     Route::prefix('/admin')->group(function () {
-       Route::get('/dashboard', [AdminController::class, 'dashboard']);
+        Route::get('/dashboard', [AdminController::class, 'dashboard']);
+        Route::get('/artists', [AdminController::class, 'artists']);
+        Route::get('/albums', [AdminController::class, 'albums']);
+
     });
 });
 

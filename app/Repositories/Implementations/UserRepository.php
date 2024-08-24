@@ -24,12 +24,12 @@ class UserRepository implements UserInterface
     function fetchAll(): JsonResponse
     {
         try {
-            $users = User::query()->with('roles')->paginate(10);
+            $users = User::query()->with('role')->paginate(10);
 
             return $this->success("All users with pagination", $users);
         }
         catch (\Exception $exception) {
-            return $this->error($exception->getMessage(), $exception->getCode());
+            return $this->error($exception->getMessage(), 400);
         }
     }
 
