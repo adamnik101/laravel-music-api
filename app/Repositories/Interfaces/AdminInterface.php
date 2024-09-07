@@ -9,4 +9,6 @@ interface AdminInterface
     public function dashboard() : JsonResponse;
     public function artists() : JsonResponse;
     public function albums() : JsonResponse;
+    public function genres() : JsonResponse;
+
 }

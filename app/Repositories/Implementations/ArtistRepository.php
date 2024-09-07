@@ -12,13 +12,14 @@ use App\Traits\ResponseAPI;
 use Carbon\Carbon;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Http\JsonResponse;
+use Illuminate\Support\Facades\DB;
 
 class ArtistRepository implements ArtistInterface
 {
     use ResponseAPI;
     function fetchAll(): JsonResponse
     {
-        $artists = Artist::query()->with('albums')->get();
+        $artists = Artist::query()->with('albums')->paginate(10);
 
         return $this->success("All artists", $artists);
     }
@@ -40,10 +41,15 @@ class ArtistRepository implements ArtistInterface
     {
         try {
             $name = $data['name'];
-            $cover = $data['cover'];
             $artist = new Artist();
             $artist->name = $name;
-            $artist->cover = ImageHelper::uploadImage($cover, 'artists');
+            $artist->verified = $data['verified'];
+
+            if(isset($data['cover'])) {
+                $artist->cover = ImageHelper::uploadImage($data['cover'], 'artists');
+            } else {
+                $artist->cover = 'default.jpg';
+            }
             $artist->save();
 
             return $this->success("Added artist", $name, 201);
@@ -57,23 +63,44 @@ class ArtistRepository implements ArtistInterface
     {
         $artist = Artist::query()->find($id);
 
+        try {
+            DB::beginTransaction();
 
-        return $this->success('Deleted an artist', $artist);
+            $artist->delete();
+
+            DB::commit();
+
+            return $this->success("Deleted Artist", $artist);
+        }
+        catch (\Exception $exception) {
+            DB::rollBack();
+            return $this->error("Server error", 500);
+        }
     }
 
     function deleteMany(ManyUuidsRequest $request): JsonResponse
     {
+        $ids = $request->get('data');
 
-        return $this->success('response', $request);
+        try{
+            Artist::destroy($ids);
+        }
+        catch (\Exception $exception) {
+            return $this->error('Error on deleting', 422);
+        }
+
+        return $this->success('Delete Many', []);
     }
     public function update(array $data, string $id): JsonResponse
     {
         $artist = Artist::query()->findOrFail($id);
         try {
             $name = $data['name'];
-            $cover = $data['cover'];
+            if(isset($data['cover'])) {
+                $cover = $data['cover'];
+                $artist->cover = ImageHelper::uploadImage($cover, 'artists');
+            }
             $artist->name = $name;
-            $artist->cover = ImageHelper::uploadImage($cover, 'artists');
             $artist->save();
 
             return $this->success("Updated artist", $name, 201);

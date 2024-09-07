@@ -2,6 +2,7 @@
 
 namespace App\Repositories\Implementations;
 
+use App\Helpers\ImageHelper;
 use App\Http\Requests\GenreRequest;
 use App\Models\Genre;
 use App\Models\Playlist;
@@ -37,7 +38,10 @@ class GenreRepository implements GenreInterface
         try {
             $genre = new Genre();
             $genre->name = $data[0]['name'];
-            $genre->cover = 'cover';
+            if(isset($data[0]["cover"])) {
+                $cover = $data[0]['cover'];
+                $genre->cover = ImageHelper::uploadImage($cover, 'genres');
+            }
             $genre->hex_color = '#fff';
 
             $genre->save();
@@ -68,7 +72,7 @@ class GenreRepository implements GenreInterface
 
             $genre->delete();
             DB::commit();
-            return $this->success('Genre has been deleted', null, 204);
+            return $this->success('Genre has been deleted', null, 201);
         }
         catch (\Exception $exception) {
             DB::rollBack();
@@ -84,6 +88,11 @@ class GenreRepository implements GenreInterface
 
             if(isset($data['name'])) {
                 $genre->name = $data['name'];
+            }
+
+            if(isset($data['cover'])) {
+                $cover = $data['cover'];
+                $genre->cover = ImageHelper::uploadImage($cover, 'genres');
             }
 
             $genre->save();

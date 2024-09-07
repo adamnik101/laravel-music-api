@@ -26,7 +26,8 @@ class GenreRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'name' => 'string|required|min:3|max:50'
+            'name' => 'string|required|min:3|max:50',
+            'cover' => 'nullable'
         ];
     }
     protected function failedValidation(Validator $validator)

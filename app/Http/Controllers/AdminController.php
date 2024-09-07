@@ -26,4 +26,9 @@ class AdminController extends Controller
     {
         return $this->admin->albums();
     }
+
+    public function genres(): JsonResponse
+    {
+        return $this->admin->genres();
+    }
 }
