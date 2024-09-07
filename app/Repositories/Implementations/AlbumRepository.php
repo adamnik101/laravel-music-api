@@ -3,6 +3,7 @@
 namespace App\Repositories\Implementations;
 
 use App\Helpers\AlbumHelper;
+use App\Helpers\ImageHelper;
 use App\Http\Requests\AlbumRequest;
 use App\Http\Requests\ArtistRequest;
 use App\Models\Album;
@@ -50,10 +51,12 @@ class AlbumRepository implements AlbumInterface
         try {
             if(!Artist::query()->find($data['artist_id']))  return $this->error('Provided artist does not exists', 422);
 
+            $imagePath = ImageHelper::uploadImage($data['cover'], 'albums');
+
             $album = new Album();
             $album->name = $data['name'];
             $album->release_year = $data['release_year'];
-            $album->cover = $data['cover'];
+            $album->cover = $imagePath;
             $album->artist_id = $data['artist_id'];
 
             $album->save();
@@ -88,7 +91,31 @@ class AlbumRepository implements AlbumInterface
 
     public function update(array $data, string $id): JsonResponse
     {
-        // TODO: Implement update() method.
+        try {
+            if(!Artist::query()->find($data['artist_id']))  return $this->error('Provided artist does not exists', 422);
+
+            $imagePath = "";
+            if(isset($data['cover'])) {
+
+                $imagePath = ImageHelper::uploadImage($data['cover'], 'albums');
+            }
+
+            $album = Album::query()->findOrFail($id);
+            $album->name = $data['name'];
+            $album->release_year = $data['release_year'];
+            if(isset($data['cover'])) {
+
+                $album->cover = $imagePath;
+            }
+            $album->artist_id = $data['artist_id'];
+
+            $album->save();
+
+            return $this->success("Updated album", $data, 204);
+        }
+        catch (\Exception $exception) {
+            return $this->error($exception->getMessage(), 500);
+        }
     }
 
     public function newReleases() : JsonResponse

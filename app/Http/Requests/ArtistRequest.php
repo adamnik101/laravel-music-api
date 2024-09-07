@@ -27,7 +27,8 @@ class ArtistRequest extends FormRequest
     {
         return [
             "name" => "required|string|min:2|max:100",
-            "cover" => 'required'
+            "cover" => 'nullable',
+            "verified" => "required"
         ];
     }
 

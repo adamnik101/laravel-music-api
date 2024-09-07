@@ -61,8 +61,8 @@ Route::whereUuid('id')->group(function () {
     Route::prefix('/users')->middleware(['auth:sanctum'])->group(function () {
         Route::get('/', [UserController::class, 'fetchAll']);
         Route::get('/{id}', [UserController::class, 'fetchOne']);
-        Route::post('/{id}/update', [UserController::class, 'update']);
-        Route::post('/delete', [UserController::class, 'delete']);
+        Route::patch('/{id}', [UserController::class, 'update']);
+        Route::delete('/{id}', [UserController::class, 'delete']);
 
         Route::get('/search', [SearchController::class, 'searchUsers']);
     });
@@ -79,8 +79,8 @@ Route::whereUuid('id')->group(function () {
             Route::get('/search', [SearchController::class, 'searchAlbums']);
 
             Route::post('', [AlbumController::class, 'insert']);
-            Route::post('/{id}/update', [AlbumController::class, 'update']);
-            Route::post('/delete', [AlbumController::class, 'delete']);
+            Route::patch('/{id}', [AlbumController::class, 'update']);
+            Route::delete('/{id}', [AlbumController::class, 'delete']);
         });
     });
 
@@ -92,7 +92,7 @@ Route::whereUuid('id')->group(function () {
             Route::get('/search', [SearchController::class, 'searchArtists']);
 
             Route::post('/', [ArtistController::class, 'insert']);
-            Route::post('/{id}/update', [ArtistController::class, 'update']);
+            Route::patch('/{id}', [ArtistController::class, 'update']);
             Route::delete('/{id}', [ArtistController::class, 'delete']);
             Route::post('/delete-many', [ArtistController::class, 'deleteMany']);
         });
@@ -108,7 +108,7 @@ Route::whereUuid('id')->group(function () {
             Route::post('/', [TrackController::class, 'insert']);
             Route::get('/search', [SearchController::class, 'searchTracks']);
             Route::post('/{id}/update', [TrackController::class, 'update']);
-            Route::delete('/delete', [TrackController::class, 'delete']);
+            Route::delete('/{id}', [TrackController::class, 'delete']);
             Route::post('/delete-many', [TrackController::class, 'deleteMany']);
         });
     });
@@ -117,7 +117,7 @@ Route::whereUuid('id')->group(function () {
         Route::get('/', [GenreController::class, 'fetchAll']);
         Route::get('/{id}', [GenreController::class, 'fetchOne']);
         Route::middleware(['auth:sanctum'])->group(function () {
-            Route::post('/{id}/update', [GenreController::class, 'update']);
+            Route::patch('/{id}', [GenreController::class, 'update']);
             Route::delete('/{id}', [GenreController::class, 'delete']);
             Route::post('/', [GenreController::class, 'insert']);
 
@@ -142,7 +142,7 @@ Route::whereUuid('id')->group(function () {
         Route::get('/dashboard', [AdminController::class, 'dashboard']);
         Route::get('/artists', [AdminController::class, 'artists']);
         Route::get('/albums', [AdminController::class, 'albums']);
-
+        Route::get('/genres', [AdminController::class, 'genres']);
     });
 });
 

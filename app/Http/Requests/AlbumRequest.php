@@ -28,7 +28,7 @@ class AlbumRequest extends FormRequest
         return [
             "name" => 'required|string|min:2|max:100',
             "release_year" => 'required|digits:4',
-            "cover" => 'required|string',
+            "cover" => 'nullable',
             "artist_id" => 'required|uuid'
         ];
     }

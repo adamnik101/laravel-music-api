@@ -50,7 +50,7 @@ class UserRepository implements UserInterface
 
     function insert(array $data)
     {
-        // TODO: Implement insert() method.
+        return $this->success('Added user', $data, 200);
     }
     function delete(string $id): JsonResponse
     {

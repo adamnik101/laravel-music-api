@@ -12,7 +12,8 @@ class TrackSerializer
         return [
             "id" => $track->id,
             "title" => $track->title,
-            "features" => $track->features
+            "features" => $track->features,
+            "liked_by" => $track->likedBy()
         ];
     }
 }
