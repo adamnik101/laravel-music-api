@@ -99,6 +99,13 @@ class AuthRepository implements AuthInterface
         return $this->success("User data", $user);
     }
 
+    public function fetchUserRole(): JsonResponse
+    {
+        $user = User::query()->with(['role'])->find(Auth::user()->getAuthIdentifier());
+
+        return $this->success('Updated profile image', $user->role);
+    }
+
     function logout(): JsonResponse
     {
        $user = User::query()->find(Auth::user()->getAuthIdentifier());

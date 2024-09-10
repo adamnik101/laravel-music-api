@@ -34,6 +34,7 @@ Route::prefix('/auth')->group(function () {
       Route::get('/token', [AuthController::class, 'getToken']);
       Route::delete('/token', [AuthController::class, 'logout']);
       Route::get('me', [AuthController::class, 'getUser']);
+      Route::get('user-role', [AuthController::class, 'fetchUserRole']);
    });
 });
 Route::get('/search', [SearchController::class, 'search']);
@@ -107,7 +108,7 @@ Route::whereUuid('id')->group(function () {
         Route::middleware(['auth:sanctum'])->group(function () {
             Route::post('/', [TrackController::class, 'insert']);
             Route::get('/search', [SearchController::class, 'searchTracks']);
-            Route::post('/{id}/update', [TrackController::class, 'update']);
+            Route::patch('/{id}', [TrackController::class, 'update']);
             Route::delete('/{id}', [TrackController::class, 'delete']);
             Route::post('/delete-many', [TrackController::class, 'deleteMany']);
         });

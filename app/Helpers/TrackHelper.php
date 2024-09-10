@@ -13,17 +13,18 @@ class TrackHelper
     use ResponseAPI;
     public static function saveTrackFile(UploadedFile $file) : string
     {
+
         $extension = $file->getClientOriginalExtension();
-        $newName = time().'.'.$extension;
+        $newName = $file->getClientOriginalName();
 
-        $file->move('F:\WebStorm Projects\zavrsniAng\src\assets\tracks', $newName);
+        $file->move("F:\\new ng\\ng-zavrsni\public\\audio\\", $newName);
 
-        return 'assets/tracks/'.$newName;
+        return 'audio/'.$newName;
     }
     public static function getTrackDurationInSeconds(string $filePath): ?float
     {
         try {
-            $info = new Mp3Info('F:\WebStorm Projects\zavrsniAng\src\\'.$filePath);
+            $info = new Mp3Info('F:\\new ng\\ng-zavrsni\public\\'.$filePath);
             return floor($info->duration);
         }
         catch (\Exception $exception) {
