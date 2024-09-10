@@ -133,7 +133,7 @@ class AlbumRepository implements AlbumInterface
             ->join('track_plays', 'tracks.id', '=', 'track_plays.track_id')
             ->join('artists', 'artists.id', '=', 'albums.artist_id')
             ->whereBetween('track_plays.created_at', [$sevenDaysAgo, now()])
-            ->groupBy('albums.id', 'albums.name', 'albums.cover', 'albums.release_year', 'artists.id', 'artists.name')
+            ->groupBy('albums.id', 'albums.name', 'albums.cover', 'albums.release_year', 'artists.id', 'artists.name', 'albums.artist_id', 'albums.deleted_at', 'albums.created_at', 'albums.updated_at')
             ->orderByDesc(DB::raw('track_count'))
             ->take(6)
             ->get();

@@ -112,7 +112,9 @@ class PlaylistRepository implements PlaylistInterface
         }
 
         $playlist->title  = $data['title'];
-        $playlist->description = $data['description'];
+        if(isset($data['description'])) {
+            $playlist->description = $data['description'];
+        }
         $playlist->updated_at = now();
 
         $playlist->save();

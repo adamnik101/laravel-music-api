@@ -77,7 +77,15 @@ class UserRepository implements UserInterface
 
     public function update(array $data, string $id): JsonResponse
     {
-        // TODO: Implement update() method.
+        $user = User::query()->findOrFail($id);
+
+        $user->email = $data['email'];
+        $user->role_id = $data['role_id'];
+        $user->username = $data['username'];
+
+        $user->save();
+
+        return $this->success('User updated successfully.', $user, 200);
     }
 
     public function fetchUserLikedTracks(): JsonResponse

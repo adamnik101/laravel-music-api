@@ -21,7 +21,7 @@ class UserController extends BaseController {
     {
         return $this->repository->insert($request->validated());
     }
-    public function update($request, string $id): JsonResponse
+    public function update(UserRequest $request, string $id): JsonResponse
     {
         return $this->repository->update($request->validated(), $id);
     }
