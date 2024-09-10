@@ -39,4 +39,9 @@ class AuthController extends Controller
     {
         return $this->authRepository->logout();
     }
+
+    function fetchUserRole(): JsonResponse
+    {
+        return $this->authRepository->fetchUserRole();
+    }
 }

@@ -152,7 +152,7 @@ class PlaylistRepository implements PlaylistInterface
             }
         }
 
-        $tracksAlreadyInPlaylist = $playlist->tracks()->findMany($trackIds)->pluck('id')->unique()->toArray();
+        $tracksAlreadyInPlaylist = $playlist->tracks()->findMany($trackIds)->pluck('id')->unique();
         if(count($tracksAlreadyInPlaylist) == 0) {
             PlaylistHelper::addTracks($playlist, $trackIds);
             return $this->success("Success", $successResponse, 201);

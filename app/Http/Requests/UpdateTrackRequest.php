@@ -29,7 +29,7 @@ class UpdateTrackRequest extends FormRequest
         return [
             'title' => 'bail|required|string',
             'owner' => 'bail|required|uuid',
-            'cover' => 'nullable|mimes:jpg,png',
+            'cover' => 'nullable',
             'track' => 'nullable|mimes:mp3,wav',
             'genre' => 'bail|required|uuid',
             'album' => 'bail|nullable|exists:albums,id',

@@ -29,7 +29,7 @@ class TrackRequest extends FormRequest
         return [
             'title' => 'required|string',
             'owner' => 'required|uuid',
-            'cover' => 'required|mimes:jpg,png',
+            'cover' => 'required',
             'track' => 'required|mimes:mp3,wav',
             'genre' => 'required|uuid',
             'album' => 'nullable|exists:albums,id',

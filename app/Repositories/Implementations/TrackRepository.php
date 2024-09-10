@@ -26,7 +26,7 @@ class TrackRepository implements TrackInterface
 
     function fetchAll(): JsonResponse
     {
-        $tracks = Track::query()->paginate(10);
+        $tracks = Track::query()->orderByDesc('created_at')->paginate(10);
 
         return $this->success("All tracks with pagination", $tracks);
     }
@@ -111,9 +111,7 @@ class TrackRepository implements TrackInterface
                 $track->genre_id = $data['genre'];
             }
 
-            if(isset($data['explicit'])) {
-                $track->explicit = (bool) $data['explicit'];
-            }
+                $track->explicit = (boolean)$data['explicit'];
 
             if(isset($data['album'])) {
                 $track->album_id = $data['album'];
